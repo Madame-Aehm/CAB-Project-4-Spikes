@@ -1,3 +1,5 @@
 # Project 3
 
-## Spike 19 - Project Kick Off
+# Project 4
+
+## Spike 19 - MERN Project Kick Off + Database setup

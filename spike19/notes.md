@@ -44,9 +44,9 @@ npm init
 
 - You'll then be prompted to establish some information about your project. If you later want to change any of these details, you can edit the package.json. 
 
-- Next we're going to [install](https://expressjs.com/en/starter/installing.html) **Express**, after which you'll notice you now have a node_modules folder, a package-lock.json, and your package.json will have 'express' listed under 'dependencies'.
+- Next we're going to install [**Express**](https://expressjs.com/en/starter/installing.html), after which you'll notice you now have a node_modules folder, a package-lock.json, and your package.json will have 'express' listed under 'dependencies'.
 
-- Not essental, but very useful is [Nodemon](https://www.npmjs.com/package/nodemon). It's worth installing this globally, so it will automatically apply to future Node.js projects. Nodemon will automatically restart your server after you save. Without this package, every time you make a change to your server, you'll need to exit and manually restart it for those changes to apply.
+- Not essental, but very useful is [**Nodemon**](https://www.npmjs.com/package/nodemon). Nodemon will automatically restart your server after you save. Without this package, every time you make a change to your server, you'll need to exit and manually restart it for those changes to apply.
 
 - Also not essential, but it will make things look more familiar - on your package.json, add to the main object:
 
@@ -54,7 +54,7 @@ npm init
 "type": "module"
 ```
 
-- All this does is remove the need to 'require', you can use 'import' the same way we've been using in React. 
+- All this does is remove the need to 'require', instead you can just use 'import' the same way we've been using in React. A package.json "type" value of "module" tells Node.js to interpret **.js** files within that package as using [ES module syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 
 - While we're on the package.json, we can add a script to start our server. Under the 'scripts' property, add a 'start' sub-property and give it the value 'nodemon index.js':
 
@@ -75,9 +75,9 @@ app.listen(port, () => {
 });
 ```
 
-- To test if we've followed all the steps, run 'npm start' from the terminal in the 'server' directory. Anything logged to the console from the server side, will be visible in your server terminal!
+- To test if we've followed all the steps, run 'npm start' from the terminal in the 'server' directory. Anything logged to the console from the server side will be visible in your server terminal!
 
-- We'll also want to add some **Middlewares** to help us out: **express.json** and **express.urlencoded** are already installed from the Express package, but we'll still need to [install](https://expressjs.com/en/resources/middleware/cors.html) **cors**. Then, we can configure out app to use them from our index.js file. Make sure the app knows to **use** them _before_ it starts **listening**:
+- We'll also want to add some **Middlewares** to help us out: **express.json** and **express.urlencoded** are already installed from the Express package, but we'll still need to install [**CORS**](https://expressjs.com/en/resources/middleware/cors.html). Then, we can configure our app to use them from our index.js file. Make sure the app knows to **use** them _before_ it starts **listening**:
 
 ```js
 import cors from "cors";
@@ -91,7 +91,7 @@ app.use(
 app.use(cors());
 ```
 
-- Another non-essential, but very convenient package you can install is **concurrently**. This will let us launch both our back-end server, and React server, with just one command. Otherwise, you'll need to have two terminals open - one for each. You can adapt the following script to whatever you find most convenient:
+- Another non-essential, but very convenient package you can install is **concurrently**. This will let us launch both our back-end server and our React server with just one command. Otherwise, you'll need to have two terminals open - one for each. You can adapt the following script to whatever you find most convenient:
 
 ```js
 "scripts": {

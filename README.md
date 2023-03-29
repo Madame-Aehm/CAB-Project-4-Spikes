@@ -2,6 +2,6 @@
 
 # Project 4
 
-## Spike 19 - MERN Project Kick Off + Database setup
+## Spike 19 - MERN Project Kick Off, Project Structure + Initial Setup
 
-## Spike 20 - Server Structure + Connect MongoDB
+## Spike 20 - Express Server + Mongoose

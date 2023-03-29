@@ -32,7 +32,7 @@ rm -rf .git
 
 - Build a database - make sure you select **M0 FREE**. If you have a preferred provider, you can select them. I select **Frankfurt (eu-central-1)** for my region, since this is the closest to our location. You can also rename your **cluster**. Read more about clusters [here](https://www.mongodb.com/basics/clusters#:~:text=MongoDB%20Atlas%20Cluster%20is%20a,from%20your%20favorite%20web%20browser.).
 
-- Enter a username and password to gain access to your database. In the left-hand menu under Network Access (under Security), click on the button to **+ADD IP ADDRESS**, then click to 'allow access from anywhere'. If you now click on **Browse Collections**, this is where your data will be stored. Click on **Add My Own Data** to create a **Database**, and a **Collection**. Make sure the names conform to MongoDB's [naming restrictions](https://www.mongodb.com/docs/manual/reference/limits/#naming-restrictions). 
+- Enter a username and password to gain access to your database. In the left-hand menu under Network Access (under Security), click on the button to **+ADD IP ADDRESS**, then click to 'allow access from anywhere'. If you now click on **Browse Collections**, this is where your data will be stored. Click on **Add My Own Data** to create a **Database**, and a **Collection**. Later, we're going to be using **Mongoose** which uses specific naming rules to find data, so make sure you name your collections with lower-case, plural, English words.
 
 ## Node.js Server Setup
 

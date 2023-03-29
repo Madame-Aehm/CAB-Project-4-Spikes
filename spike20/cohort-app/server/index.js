@@ -40,7 +40,7 @@ app.use('/api/scouts', scoutsRouter);
 const port = process.env.PORT || 5000;
 
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(port, () => {
       console.log("Connection to Mongo DB established and Server is running on port " + port);

@@ -7,4 +7,4 @@ const scoutSchema = new mongoose.Schema({
   gender: { type: String, required: true }
 });
 
-export const scoutModel = mongoose.model("Scout", scoutSchema);
+export const Scout = mongoose.model("scout", scoutSchema);

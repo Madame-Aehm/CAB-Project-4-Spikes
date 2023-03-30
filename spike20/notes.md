@@ -14,9 +14,9 @@ app.get('/', (req, res) => {
 
 - Since this project is going to be quite large, we're going to separate it into different folders. There are a few ways you can structure your project, if you choose a different folder structure to this one, just make sure you stay consistent so you don't get confused! Create a folder now to hold all our 'routes', and a **.js** file inside for 'user', or 'userRoutes'. This is where we're going to define all the end-points that will affect the documents held in our 'users' collection over on MongoDB.
 
-- In our routes file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A Router instance is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
+- In our userRoutes.js file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
 
-- Use this router instance to set up a test 'get' route. Make sure to also export the router instance: 
+- Use this Router Instance to set up a test 'get' route. Make sure to also export the router instance: 
 
 ```js
 import express from 'express'
@@ -38,7 +38,7 @@ import userRouter from './routes/users.js'
 app.use('/api/users', userRouter);
 ```
 
-- Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take node of where you're putting your **/** symbols.
+- Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take note of where you're putting your **/** symbols.
 
 - Since some of the callback functions for our routes will get quite long, a good practise is to collect them all in a **controller** file. I'm going to create a folder 'controllers', and inside I'll create a **.js** file for 'user', or 'userController'. Here I will write and export my express functions, then import them into my routes file. I'll demonstrate this with the test route function, even though it is only very small. **Note** the difference between a **regular export**, and a **default export**. 
 
@@ -55,7 +55,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 ```
 
-- Create a new file in the server root folder called **.env**. This will hold all our environmental variables. **Make sure to add it to the .gitignore!!**
+- Create a new file in the server root folder called **.env**. This will hold all our environment variables. **Make sure to add it to the .gitignore!!**
 
 - .env files save data in the format: VARIABLE_NAME=value. Strings don't need quotation marks. To access this variable, use **process.env.VARIABLE_NAME**. We're going to save the code snippet from MongoDB as a variable:
 
@@ -78,9 +78,9 @@ mongoose
   .catch((err) => console.log(err));
 ```
 
-- One of the reasons we're using Mongoose on top of MongoDB is because it offers us the opportunity to create **Models** of our data, essentially locking the form it can take with a **Schema**. You set the shape of your data object, and Mongoose makes sure any attempts to add or update data conform to the defined shape. Since we'll need a Model for every collection, we'll make another folder in our server for 'models', and a **.js** file for 'user', or 'userModels'.
+- One of the reasons we're using Mongoose on top of MongoDB is because it offers us the opportunity to create **Models** of our data, essentially locking the form it can take with a **Schema**. You set the shape of your data object, and Mongoose makes sure any attempts to add or update data conform to the defined shape. Since we'll need a Model for every collection, we'll make another folder in our server for 'models', and a **.js** file for 'user', or 'userModel'.
 
-- On the userModels.js file, import mongoose from 'mongoose'. This variable has a property **Schema**, which we can use to create a **new** Schema, and define the shape of our user object:
+- On the userModel.js file, import mongoose from 'mongoose'. This variable has a property **Schema**, which we can use to create a **new** Schema, and define the shape of our user object:
 
 ```js
 import mongoose from 'mongoose';
@@ -94,19 +94,46 @@ const userSchema = new mongoose.Schema({
 
 - There is huge potential for creating incredibly complex and specific Schemas. For more info, have a read of the [docs](https://mongoosejs.com/docs/guide.html).
 
-- Once we have defined a Schema, using another property on the mongoose variable we will create a **Model**. Mongoose [best-practise](https://samwize.com/2014/03/07/what-mongoose-never-explain-to-you-on-case-sentivity/) is to name your Modal with the **capitalized**, **singular** version of your collection name (remember we gave it a **lower-case**, **plural**, **English** word for a name). Then link it to the collection using the **lower-case**, **singular** verion of your collection name. Make sure to export it:
+- Let's create a collection for 'users' on MongoDB and then manually add some documents. Make sure each document conforms to the Schema, and be very careful not to make any typos. Remember that your collection should have a **lower-case**, **plural**, **English** word for a name.
+
+- Back on our userModel.js file, using another property on the mongoose variable we will create a **Model**. Mongoose [best-practise](https://samwize.com/2014/03/07/what-mongoose-never-explain-to-you-on-case-sentivity/) is to name your Modal with the **capitalized**, **singular** version of your collection name. Then link it to the collection using the **lower-case**, **singular** verion of your collection name. Make sure to export it:
 
 ```js
 export const User = mongoose.model("user", userSchema);
 ```
 
-- We can use this Model to access the collection. Back over on our userControllers.js file, we can write a new function to **.find()** all the documents, and return a **.status(200)** response as a **.json()**. Export this, then use it in the callback for a new route on userRoutes.js. Once it's working in Postman, we can try to do a fetch from React!
+- We can use this Model to access the collection. Back over on our userControllers.js file, we can write a new function to **.find()** all the documents, and return a **.status(200)** response as a **.json()**. Export this, then use it in the callback for a new route on userRoutes.js:
 
-- Now we should build some endpoints to make a more specific [find](https://mongoosejs.com/docs/api/model.html#Model.find()) requests. Let's make some endpoints with parameters! One will be a request to find a specific user by their id - this will always return only one result. Another could be to look through the existing users and return all who's name match an input.
+```js
+// routes
+import { getUsers } from '../controllers/userController.js';
+
+userRouter.get("/all", getUsers);
+```
+
+```js
+// controller
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (e) {
+    console.log(e);
+  }
+}
+```
+
+- But what if we want to make more specific [find](https://mongoosejs.com/docs/api/model.html#Model.find()) requests? Let's make some endpoints with parameters! One will be a request to find a specific user by their id - this will always return only one result. Another could be to look through the existing users and return all who's firstName property match an input.
 
 - In our userController.js, write a function to getUserById. First I'm just going to demonstrate how parameters can be accessed on the **req** object:
 
 ```js
+// routes
+userRouter.get("/id/:id", getUserById);
+```
+
+```js
+// controller
 const getUserById = async(req, res) => {
   const params = req.params;
   console.log("params", params);
@@ -114,4 +141,12 @@ const getUserById = async(req, res) => {
 }
 ```
 
-- We can put this information into Mongoose's **.findBId()** method to return the single document with the Id that matches. If instead of an Id, we sent some other potential detail we want to search by, we could use **.findOne({ detail: value })** to find the _first_ matching document in the collection, or **.find()** to return an array of matching documents. **note** that these matches will be subject to case-sensitivity!
+- We can put this information into Mongoose's **.findBId()** method to return the single document with the Id that matches. If instead of an Id, we sent some other potential detail we want to search by, we could use **.findOne({ detail: value })** to find the _first_ matching document in the collection, or **.find({ detail: value })** to return an array of all matching documents. **note** that these matches will be subject to case-sensitivity unless you specify! 
+
+- Returning a [status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) will help with error handling from your front-end. Here are some codes you can return in different scenarios:
+
+![status_codes1](status_codes1.png)
+![status_codes2](status_codes2.png)
+![status_codes3](status_codes3.png)
+
+- **GET** method API requests are only ever to **read** data. If you want to read ahead about **adding**, **updating** or **deleting** data, have a look at [querying](https://mongoosejs.com/docs/models.html#querying) and [documents](https://mongoosejs.com/docs/documents.html) (Mongoose documentation), [request methods](https://en.wikipedia.org/wiki/HTTP#Request_methods), and [routing](https://expressjs.com/en/guide/routing.html) (Express documentation).

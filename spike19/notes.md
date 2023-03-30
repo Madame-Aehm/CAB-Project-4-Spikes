@@ -10,7 +10,7 @@
 
 - **Node.js** is an environment that can run JavaScript outside a browser. This means the developer can continue to write in JavaScript, even for back-end programming. [This](https://kinsta.com/knowledgebase/what-is-node-js/) page gives a good summary.
 
-- **Express.js** is a framework designed to build APIs. On it's own, Node.js does not know how to perform serving files, handling requests, and handling HTTP methods, so this is where Express.js comes in. Express is to Node as React is to JavaScript! [This](https://kinsta.com/knowledgebase/what-is-express-js/) page gives a good summary.
+- **Express.js** is a framework designed to build APIs. On it's own, Node.js does not know how to perform serving files, handling requests, and handling HTTP methods, so this is where Express.js comes in. Express is to Node, as React is to JavaScript! [This](https://kinsta.com/knowledgebase/what-is-express-js/) page gives a good summary.
 
 - **MongoDB** is a document database, it stores data in JSON-like documents. We will use it to hold the data we previously saved in Firebase. 
 
@@ -30,7 +30,7 @@ rm -rf .git
 
 - Create a MongoDB account. We'll then be following the steps from MongoDB's documentation on [getting started](https://www.mongodb.com/docs/atlas/getting-started/).
 
-- Build a database - make sure you select **M0 FREE**. If you have a preferred provider, you can select them. I select **Frankfurt (eu-central-1)** for my region, since this is the closest to our location. You can also rename your **cluster**. Read more about clusters [here](https://www.mongodb.com/basics/clusters#:~:text=MongoDB%20Atlas%20Cluster%20is%20a,from%20your%20favorite%20web%20browser.).
+- Build a database - make sure you select **M0 FREE**. If you have a preferred provider, you can select them. I select **Frankfurt (eu-central-1)** for my region, since this is the closest to our location. You can also rename your **cluster**. Read more about clusters [here](https://www.mongodb.com/basics/clusters).
 
 - Enter a username and password to gain access to your database. In the left-hand menu under Network Access (under Security), click on the button to **+ADD IP ADDRESS**, then click to 'allow access from anywhere'. If you now click on **Browse Collections**, this is where your data will be stored. Click on **Add My Own Data** to create a **Database**, and a **Collection**. Later, we're going to be using **Mongoose** which uses specific naming rules to find data, so make sure you name your collections with lower-case, plural, English words.
 
@@ -54,7 +54,7 @@ npm init
 "type": "module"
 ```
 
-- All this does is remove the need to 'require', instead you can just use 'import' the same way we've been using in React. A package.json "type" value of "module" tells Node.js to interpret **.js** files within that package as using [ES module syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+- All this does is remove the need to 'require' packages, instead you can just use 'import' the same way we've been using in React. A package.json "type" value of "module" tells Node.js to interpret **.js** files within that package as using [ES module syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 
 - While we're on the package.json, we can add a script to start our server. Under the 'scripts' property, add a 'start' sub-property and give it the value 'nodemon index.js':
 

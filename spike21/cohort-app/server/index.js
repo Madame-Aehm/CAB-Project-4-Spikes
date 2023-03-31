@@ -2,6 +2,7 @@ import express from "express";
 // const express = require('express');
 import cors from "cors";
 import scoutsRouter from './routes/scouts.js'
+import petsRouter from './routes/pets.js'
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 
@@ -34,6 +35,7 @@ app.get('/hello', (req, res) => {
 
 //define base api base routes
 app.use('/api/scouts', scoutsRouter);
+app.use('/api/pets', petsRouter);
 
 
 //listen to server on port #

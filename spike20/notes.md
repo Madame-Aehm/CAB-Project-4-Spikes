@@ -94,7 +94,7 @@ const userSchema = new mongoose.Schema({
 
 - There is huge potential for creating incredibly complex and specific Schemas. For more info, have a read of the [docs](https://mongoosejs.com/docs/guide.html).
 
-- Let's create a collection for 'users' on MongoDB and then manually add some documents. Make sure each document conforms to the Schema, and be very careful not to make any typos. Remember that your collection should have a **lower-case**, **plural**, **English** word for a name.
+- Let's create a collection for 'users' on MongoDB and then manually add some documents. Make sure each document conforms to the Schema, and be very careful not to make any typos. Remember that your collection should have a **lower-case**, **plural** name.
 
 - Back on our userModel.js file, using another property on the mongoose variable we will create a **Model**. Mongoose [best-practise](https://samwize.com/2014/03/07/what-mongoose-never-explain-to-you-on-case-sentivity/) is to name your Modal with the **capitalized**, **singular** version of your collection name. Then link it to the collection using the **lower-case**, **singular** verion of your collection name. Make sure to export it:
 
@@ -148,5 +148,7 @@ const getUserById = async(req, res) => {
 ![status_codes1](status_codes1.png)
 ![status_codes2](status_codes2.png)
 ![status_codes3](status_codes3.png)
+
+- Validating on the server-side _as well_ as validating on the client side is very important. Just in case any mistakes slip through, you want to avoid sending pointless requests any further. There are some simple validation checks you can perform, such as checking that all required fields exist, emails and passwords are correctly formatted. To assist you with this, have a look at [**Express Validator**](https://express-validator.github.io/docs/). Sending back custom error messages is fine, but make sure to keep them consistently formatted. 
 
 - **GET** method API requests are only ever to **read** data. If you want to read ahead about **adding**, **updating** or **deleting** data, have a look at [querying](https://mongoosejs.com/docs/models.html#querying) and [documents](https://mongoosejs.com/docs/documents.html) (Mongoose documentation), [request methods](https://en.wikipedia.org/wiki/HTTP#Request_methods), and [routing](https://expressjs.com/en/guide/routing.html) (Express documentation).

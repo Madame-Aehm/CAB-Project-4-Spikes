@@ -32,7 +32,7 @@ rm -rf .git
 
 - Build a database - make sure you select **M0 FREE**. If you have a preferred provider, you can select them. I select **Frankfurt (eu-central-1)** for my region, since this is the closest to our location. You can also rename your **cluster**. Read more about clusters [here](https://www.mongodb.com/basics/clusters).
 
-- Enter a username and password to gain access to your database. In the left-hand menu under Network Access (under Security), click on the button to **+ADD IP ADDRESS**, then click to 'allow access from anywhere'. If you now click on **Browse Collections**, this is where your data will be stored. Click on **Add My Own Data** to create a **Database**, and a **Collection**. Later, we're going to be using **Mongoose** which uses specific naming rules to find data, so make sure you name your collections with lower-case, plural, English words.
+- Enter a username and password to gain access to your database. In the left-hand menu under Network Access (under Security), click on the button to **+ADD IP ADDRESS**, then click to 'allow access from anywhere'. If you now click on **Browse Collections**, this is where your data will be stored. Click on **Add My Own Data** to create a **Database**, and a **Collection**. Later, we're going to be using **Mongoose** which uses specific naming rules to find data, so make sure you give your collections **lower-case, plural** names.
 
 ## Node.js Server Setup
 
@@ -77,7 +77,7 @@ app.listen(port, () => {
 
 - To test if we've followed all the steps, run 'npm start' from the terminal in the 'server' directory. Anything logged to the console from the server side will be visible in your server terminal!
 
-- We'll also want to add some **Middlewares** to help us out: **express.json** and **express.urlencoded** are already installed from the Express package, but we'll still need to install [**CORS**](https://expressjs.com/en/resources/middleware/cors.html). Then, we can configure our app to use them from our index.js file. Make sure the app knows to **use** them _before_ it starts **listening**:
+- We'll also want to add some **Middlewares** to help us out: **express.json** and **express.urlencoded** are already installed from the Express package, we need them for when we start using POST requests. We'll need to install the [**CORS**](https://expressjs.com/en/resources/middleware/cors.html) npm package, which will enable CORS in our app. Then, we can configure our app to use them from our index.js file. Make sure the app knows to **use** them _before_ it starts **listening**:
 
 ```js
 import cors from "cors";
@@ -91,7 +91,7 @@ app.use(
 app.use(cors());
 ```
 
-- Another non-essential, but very convenient package you can install is **concurrently**. This will let us launch both our back-end server and our React server with just one command. Otherwise, you'll need to have two terminals open - one for each. You can adapt the following script to whatever you find most convenient:
+- Another non-essential (but very convenient) package you can install is [**concurrently**](https://www.npmjs.com/package/concurrently). This will let us launch both our back-end server and our React server with just one command. Otherwise, you'll need to have two terminals open - one for each. You can adapt the following script to whatever you find most convenient:
 
 ```js
 "scripts": {

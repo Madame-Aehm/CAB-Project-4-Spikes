@@ -84,7 +84,7 @@ const createUser = async(req, res) => {
 }
 ```
 
-- Once this is working we can create a form in React. A trick to keeping all your object changes to a single handleChange function, is to use [] around a property name. This way, you can define the property from the event.target.name, and the value from the event.target.value:
+- Once this is working we can create a form in React. A trick to keeping all your object changes to a single handleChange function, is to use [] around a property name to define it from a variable (in this case, the event.target.name), and the value from the event.target.value:
 
 ```js
   const handleChange = (e) => {
@@ -111,4 +111,4 @@ const updateUser = async(req, res) => {
 }
 ```
 
-- Let's look at a different way to append the data from the body to the request. In the previous example, we stringified a JavaScript object to create **raw** data. This time let's use **x-www-form-urlencoded**. In Postman, select 'x-www-form-urlencoded' to replace 'raw'. Put the property you want to update as the 'key', and the new value as 'value'. Send the request! If it works without error, check the sample code and compare the way the fetch has been written. 
+- Let's look at a different way to append the data from the body to the request. In the previous example, we stringified a JavaScript object to create **raw** data. This time let's use **x-www-form-urlencoded**. In Postman, select 'x-www-form-urlencoded' to replace 'raw'. Put the property you want to update as the 'key', and the new value as 'value'. Send the request! If it works without error, check the sample code and compare the way the fetch has been written. Submitting request body data in this way is why we needed to add the express middlewares to our setup.

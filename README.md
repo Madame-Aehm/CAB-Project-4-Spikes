@@ -6,5 +6,7 @@
 
 ## Spike 20 - Express Server + Mongoose
 
-## Spike 21 - Create, Update & Delete + Populate
+## Spike 21 - Populate + POST Requests
+
+## Spike 22 - Password Encryption + Image Upload
 

@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 
 function Register() {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    titan: "",
-    gender: ""
+    email: "",
+    username: "",
+    password: "",
+    avatar: undefined
   })
 
   const handleChange = (e) => {
@@ -13,11 +13,11 @@ function Register() {
       ...form,
       [e.target.name]: e.target.value
     })
-    console.log(e.target.value)
   }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    console.log(form);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const data = JSON.stringify(form);
@@ -28,7 +28,7 @@ function Register() {
       redirect: 'follow'
     };
     try {
-      const response = await fetch("http://localhost:5000/api/scouts/new", requestOptions);
+      const response = await fetch("http://localhost:5000/api/user/new", requestOptions);
       const result = await response.json();
       console.log(result);
       response.ok ? alert("successfully registered!") : alert(result.error)
@@ -41,20 +41,11 @@ function Register() {
   return (
     <div>
       <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <input name='firstName' placeholder='Enter your first name' onChange={handleChange} />
-        <input name='lastName' placeholder='Enter your last name' onChange={handleChange} />
-        <select name='titan' onChange={handleChange}>
-          <option hidden>Shifter:</option>
-          <option value={true}>Yes</option>
-          <option value={false}>No</option>
-        </select>
-        <select name='gender' onChange={handleChange}>
-          <option hidden>gender:</option>
-          <option value={'male'}>male</option>
-          <option value={'female'}>female</option>
-          <option value={'other'}>other</option>
-        </select>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1em", padding: "1em" }}>
+        <input type='email' name='email' placeholder='Enter your email' onChange={handleChange} />
+        <input type='text' name='username' placeholder='Enter your username' onChange={handleChange} />
+        <input type='password' name='password' placeholder='Enter your password' onChange={handleChange} />
+
         <button>Register me!</button>
       </form>
     </div>

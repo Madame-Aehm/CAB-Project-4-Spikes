@@ -1,5 +1,6 @@
 import { User } from "../models/users.js";
 import { encryptPassword } from "../utils/bcrypt.js";
+import { imageUpload } from "../utils/imageManagement.js";
 
 
 const getUserById = async(req, res) => {
@@ -13,11 +14,16 @@ const getUserById = async(req, res) => {
 }
 
 const createUser = async(req, res) => {
-  console.log("body:", req.body);
-  console.log("file:", req.file);
   if (!req.body.email || !req.body.password || !req.body.username) return res.status(406).json({ error: "Please fill out all fields" })
-  req.body.password = await encryptPassword(req.body.password);
-  const newUser = new User({ ...req.body });
+  const encryptedPassword = await encryptPassword(req.body.password);
+  const uploadedImage = await imageUpload(req.file, "user_avatars");
+  // console.log("uploaded image", uploadedImage);
+  const newUser = new User({ 
+    email: req.body.email,
+    password: encryptedPassword,
+    username: req.body.username,
+    avatar: uploadedImage
+   });
   try {
     const result = await newUser.save();
     res.status(200).json(result)
@@ -39,8 +45,4 @@ const updateUser = async(req, res) => {
   }
 }
 
-const userAvatar = async(req, res) => {
-
-}
-
-export { getUserById, createUser, updateUser, userAvatar }
+export { getUserById, createUser, updateUser }

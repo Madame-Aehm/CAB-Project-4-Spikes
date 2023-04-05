@@ -1,12 +1,16 @@
 import { v2 as cloudinary } from "cloudinary";
 
 export const imageUpload = async(file, folder) => {
-  console.log("file:", file);
-  console.log("folder:", folder);
-  try {
-    const result = await cloudinary.uploader.upload(file.path, { folder: folder });
-    return result
-  } catch(e) {
-    return e
+  if (file !== undefined) {
+    try {
+      const result = await cloudinary.uploader.upload(file.path, { folder: folder });
+      console.log(result);
+      return result.secure_url;
+    } catch(e) {
+      console.log(e);
+      return undefined;
+    }
+  } else {
+    return undefined;
   }
 }

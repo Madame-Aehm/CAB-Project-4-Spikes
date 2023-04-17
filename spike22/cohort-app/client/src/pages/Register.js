@@ -9,22 +9,21 @@ function Register() {
   })
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    })
+    e.target.name === "avatar" ? setForm({ ...form, [e.target.name]: e.target.files[0] })
+     : setForm({ ...form, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     console.log(form);
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const data = JSON.stringify(form);
+    const formdata = new FormData();
+    formdata.append("email", form.email);
+    formdata.append("password", form.password);
+    formdata.append("username", form.username);
+    formdata.append("avatar", form.avatar);
     const requestOptions = {
       method: 'POST',
-      headers: myHeaders,
-      body: data,
+      body: formdata,
       redirect: 'follow'
     };
     try {
@@ -45,8 +44,9 @@ function Register() {
         <input type='email' name='email' placeholder='Enter your email' onChange={handleChange} />
         <input type='text' name='username' placeholder='Enter your username' onChange={handleChange} />
         <input type='password' name='password' placeholder='Enter your password' onChange={handleChange} />
+        <input type='file' name='avatar' accept=".jpg, .jpeg, .png" onChange={handleChange} />
 
-        <button>Register me!</button>
+        <button type='submit'>Register me!</button>
       </form>
     </div>
   )

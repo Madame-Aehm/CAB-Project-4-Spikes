@@ -6,7 +6,7 @@
 
 - Create a folder called 'lib' (for libraries), or 'utils' (for utilities). This is where we can store all extra 'helper' functions that we write or import. Create a `.js` file for bycrypt. We're going to write two main functions using the bcrypt library - one to **hash** the password into a code, and the other will be to **compare** the hashed password in our database to the unhashed password entered by the user for authentication. 
 
-- The two steps of encrypting a password are to generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to **hash** with `bcrypt.hash`. BCrypt docs show how this can be done in one or two seperate functions. We'll just put it together in one using async/await, make sure to export it to be used in your register function. You will have to specify how many **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
+- The two steps of encrypting a password are to generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to **hash** with `bcrypt.hash()`. BCrypt docs show how this can be done in one or two seperate functions. We'll put it together in one function using async/await, make sure to export it so it can be used in your register function. You will have to specify how many **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
 
 ```js
 import bcrypt from "bcrypt";
@@ -102,7 +102,7 @@ export const imageUpload = async(file, folder) => {
 
 - Basically, I've just copied this cloudinary uploader function directly from the cloudinary documentation. I'm passing a file and a folder into the function, and cloudinary does the rest to put that file into that folder. It will return quite a large object with many properties, let's upload a file and log the result to the console to look at it.
 
-- The most useful of those properties for us will be **secure_url**, which is just a link to the online source of the image. If you want to be able to delete anything from Cloudinary, you will also need to save the **public_id**. Deleting from Cloudinary is totally optional! I'm going to have my imageUpload function return just the secure URL or `undefined` so I can set the return directly as my avatar property on my newUser object. Our whole createUser function should now look something like this:
+- The most useful of those properties for us will be **secure_url**, which is just a link to the online source of the image. If you want to be able to delete anything from Cloudinary, you will also need to save the **public_id**. Deleting from Cloudinary is optional! I'm going to have my imageUpload function return just the secure URL or `undefined` so I can set the return directly as my avatar property on my newUser object. Our whole createUser function should now look something like this:
 
 ```js
 const createUser = async(req, res) => {
@@ -128,4 +128,8 @@ const createUser = async(req, res) => {
 }
 ```
 
-- Phew. Now that it's all working through Postman, we have to write a fetch to call it from our React front-end! Let's look at the code in Postman's sidebar to give us a hint. We'll also need to add an `<input type='file' />` so our user can select their file for upload. 
+- Phew. Now that it's all working through Postman, we have to write a fetch to call it from our React front-end! Let's look at the code in Postman's sidebar to guide us - we can see they're appending their body as Form Data. This is necessary so our Multer middleware can check the field we're using to hold our file. It's important to note here that 
+
+- We'll need to add an `<input type='file' />` so our user can select their file for upload. You can [access](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#getting_information_on_selected_files) this file using `event.target.files`, which will be an array of all selected files. Since we're only selecting one, it will always be the item at the zero index.
+
+**Warning:** When using FormData to submit POST requests using _XMLHttpRequest_ or the *Fetch_API* with the _multipart/form-data_ Content-Type (e.g. when uploading Files and Blobs to the server), **do not explicitly set the Content-Type header on the request**. Doing so will prevent the browser from being able to set the Content-Type header with the boundary expression it will use to delimit form fields in the request body. [Read more](https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects).

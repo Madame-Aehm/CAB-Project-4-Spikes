@@ -10,3 +10,4 @@
 
 ## Spike 22 - Password Encryption + Image Upload
 
+## Spike 23 - Authentication and Authorization

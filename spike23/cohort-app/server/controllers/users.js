@@ -1,6 +1,7 @@
 import { User } from "../models/users.js";
 import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
 import { imageUpload } from "../utils/imageManagement.js";
+import { signToken } from "../utils/jwt.js";
 
 
 const getUserById = async(req, res) => {
@@ -50,7 +51,9 @@ const logIn = async(req, res) => {
     if (existingUser) {
       const verified = await verifyPassword(req.body.password, existingUser.password);
       if (verified) {
-        res.status(200).json({ msg: "User verified!", ...existingUser })
+        // res.status(200).json(existingUser)
+        const token = signToken(existingUser);
+        res.status(200).json(token)
       } else {
         res.status(401).json({ error: "Password doesn't match" })
       }

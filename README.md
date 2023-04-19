@@ -8,8 +8,8 @@
 
 ## Spike 21 - Populate + POST Requests
 
-## Spike 22 - Password Encryption + Image Upload
+## Spike 22 - Image Upload
 
-## Spike 23 - Authentication
+## Spike 23 - Password Encryption + Authentication
 
 ## Spike 24 - Authorization

@@ -2,11 +2,11 @@
 
 ## Password Encyption
 
-- We're going to use a library called [**BCrypt**](https://www.npmjs.com/package/bcrypt) to help us encrypt passwords. This means, that even though we can see the password property in our database, it will have been scrambled into an unrecognizable code, keeping our user's data safe and private, even from us! The first step is to install the package.
+- We're going to use a library called [**BCrypt**](https://www.npmjs.com/package/bcrypt) to help us encrypt passwords. This means that even though we can see the password property in our database, it will have been scrambled into an unrecognizable code, keeping our users' data safe and private, even from us! The first step is to install the package.
 
 - Create a folder called 'lib' (for libraries), or 'utils' (for utilities). This is where we can store all extra 'helper' functions that we write or import. Create a `.js` file for bycrypt. We're going to write two main functions using the bcrypt library - one to **hash** the password into a code, and the other will be to **compare** the hashed password in our database to the unhashed password entered by the user for authentication. 
 
-- The two steps of encrypting a password are to generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to **hash** with `bcrypt.hash()`. BCrypt docs show how this can be done in one or two seperate functions. We'll put it together in one function using async/await, make sure to export it so it can be used in your register function. You will have to specify how many **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
+- The two steps of encrypting a password are to generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to hash with `bcrypt.hash()`. BCrypt docs show how this can be done in one or two seperate functions. We'll put it together in one function using async/await, make sure to export it so it can be used in your register function. You will have to specify how many **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
 
 ```js
 import bcrypt from "bcrypt";
@@ -40,11 +40,11 @@ export const verifyPassword = async (password, hashedPassword) => {
 
 - Start by creating a free account on Cloudinary. Under Media Library, you can create folders and manually add or delete files. Start by creating a folder for your user images: 'profile_pics' or 'user_avatars', whatever you like. Upload a sample image. 
 
-- On your Dashboard, you'll be able to see the Cloud Name, your API Key, and your API Secret. We'll save these variables in our `.env` file. Then create a folder in your server for 'config', to hold configuration files. This is just to save space on our `index.js`. In a `.js` file for cloudinaryConfig, copy and paste the config code snippet from the 'getting started' page in Cloudinary docs, just make sure to replace each of the variables for your process.env variables. Export this as a function, which we will call on the `index.js` together with the middlewares. 
+- On your Dashboard, you'll be able to see the Cloud Name, your API Key, and your API Secret. We'll save these variables in our `.env` file. Then create a folder in your server for **config**, to hold configuration files. This is just to save space on our `index.js`. In a `.js` file for **cloudinaryConfig**, copy and paste the config code snippet from the 'getting started' page in Cloudinary docs, just make sure to replace each of the variables for your `process.env` variables. Export this as a function, which we will call on the `index.js` together with the middlewares. 
 
 - We'll also need to update our user Schema to include an image. This will just be a string URL for the image that we will already have uploaded to Cloudinary. This is a good opportunity to demonstrate the 'default' property, which I'll set to the URL of the sample image I already uploaded. If this property isn't included on the user object, or the value is set to **undefined**, then the default will be applied. Any other value (including **null** or an empty string) will still be stored in the database!
 
-- We're going to create a function using [Multer](https://github.com/expressjs/multer#readme) to act as middleware on any routes that will recieve a file to be uploaded. In our 'utils' folder, create a `.js` file for all multer functions (you might decide to write more, later). Here, we'll write and export this function:
+- We're going to create a function using [Multer](https://github.com/expressjs/multer#readme) to act as middleware on any routes that will recieve a file to be uploaded. In our `utils`, create a `.js` file for all multer functions (you might decide to write more, later). Here, we'll write and export this function:
 
 ```js
 import multer from "multer";
@@ -67,7 +67,7 @@ export const multerUploads = multer({
 
 - The **path** import is a [module](https://nodejs.org/api/path.html) directly from Node.js. This allows us to inspect the full pathname of a file, but it also lets us isolate the file extension. We're going to add another property, **fileFilter**, to our multer object, and we're going to specify that we're only allowing files with the extensions `.jpg`, `.jpeg`, or `.png` to be uploaded.
 
-- The 'fileFilter' property accepts a function with 3 arguments: the request, the file, and another callback function. The callback function dictates what should happen after the fileFilter logic has been applied. In our case, if the file extension isn't accepted, it will throw and error and `false` indicates that the file should _not_ be uploaded. If the file extension is accepted, then it won't send an error, and `true` gives permission for the file upload to continue. 
+- The 'fileFilter' property accepts a function with 3 arguments: the request, the file, and another callback function. The callback function dictates what should happen after the fileFilter logic has been applied. In our case, if the file extension isn't accepted, it will throw an error, and `false` indicates that the file should _not_ be uploaded. If the file extension is accepted, then it won't send an error, and `true` gives permission for the file upload to continue. 
 
 - We call this Multer function on our Route _before_ the controller function. This ensures the file has been checked before it ever reaches your controller function. Now, if we log `req.file` to the console, we should see the file from our request! The rest of the text is still held in the `req.body`. When we call the function, however, we have to specify that we're uploading a **single** file, and we have to specify which **field** that file will be held in:
 
@@ -77,7 +77,7 @@ import { multerUploads } from '../utils/multer.js';
 router.post("/new", multerUploads.single("avatar"), createUser);
 ```
 
-- Now we need to write a function to upload that file to Cloudinary! In another file in my 'utils' folder, I'm going to create a `.js` file for image management. The first function will be my upload:
+- Now we need to write a function to upload that file to Cloudinary! In another file in my `utils`, I'm going to create a `.js` file for **image management**. The first function will be my upload:
 
 ```js
 import { v2 as cloudinary } from "cloudinary";
@@ -98,9 +98,9 @@ export const imageUpload = async(file, folder) => {
 }
 ```
 
-- The reason I've done check a for undefined, is so that if there isn't a file, I don't waste resources trying to upload nothing. I then return `undefined` for anything other than a successful file upload, so my default setting will apply if the field is empty, or there was an error. If you decide to make uploading a profile image a compulsory feature, then you can leave off this additional check. You could also choose to abort the user creation function and return an error.
+- The reason I've done check a for undefined, is so that if there isn't a file, I don't waste resources trying to upload nothing. I then return `undefined` for anything other than a successful file upload, so my default setting will apply if the field was empty, or there was an error. If you decide to make uploading a profile image a compulsory feature, then you can leave off this additional check. You could also choose to abort the user creation function and return an error.
 
-- Basically, I've just copied this cloudinary uploader function directly from the cloudinary documentation. I'm passing a file and a folder into the function, and cloudinary does the rest to put that file into that folder. It will return quite a large object with many properties, let's upload a file and log the result to the console to look at it.
+- Basically, I've just copied this cloudinary uploader function directly from the cloudinary documentation. I'm passing a file and a folder into the function, and cloudinary does the rest to put that file into that folder. It will return quite a large object with many properties, let's upload a file and log the result to the console to look at it. In Postman, for any POST request that includes files, we need to use **Form Data**.
 
 - The most useful of those properties for us will be **secure_url**, which is just a link to the online source of the image. If you want to be able to delete anything from Cloudinary, you will also need to save the **public_id**. Deleting from Cloudinary is optional! I'm going to have my imageUpload function return just the secure URL or `undefined` so I can set the return directly as my avatar property on my newUser object. Our whole createUser function should now look something like this:
 

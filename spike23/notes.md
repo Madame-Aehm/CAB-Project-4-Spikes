@@ -10,14 +10,14 @@
 
 - The **auth token** that we're going to be using is an open standard: the [**JSON Web Token (JWT)**](https://auth0.com/learn/json-web-tokens).
 
-- The [**debugger**](https://jwt.io/) on JWT official docs can show us how it's built: a **Header**, a **Payload**, and a **Signature**. The JSON-formatted data fields are hashed into a code which makes up the token itself. If we make any changes to any of these fields, you'll notice the token change.
+- The [**debugger**](https://jwt.io/) on JWT official docs can show us how it's built: a Header, a Payload, and a Signature. The JSON-formatted data fields are hashed into a code which makes up the token itself. If we make any changes to any of these fields, you'll notice the token change.
 
 - The **Header** will contain metadata to determine the **token type** (in our case `typ: "JWT"`) and the [**signing algorithm**](https://auth0.com/blog/json-web-token-signing-algorithms-overview/) (in our case `alg: "HS256"`, which is the default).
 
-- The **Payload** is the body of the token, this is where the actual data used to identify the user will be stored. The properties in this section are known as **claims**, and while you can put any data you like in here, there are some common [claim conventions](https://www.iana.org/assignments/jwt/jwt.xhtml):
+- The **Payload** is the body of the token, this is where the actual data used to identify the user will be stored. The properties in this section are known as **claims**, and while you can put any data you like in here, there are some [claim conventions](https://www.iana.org/assignments/jwt/jwt.xhtml):
   - **iss** = issuer (ie. your App)
   - **sub** = subject (ie. user id)
-  - **iat** = issued at (ie. the time the token was created, measured in Unix time)
+  - **iat** = issued at (ie. the time the token was created, measured in Unix time, generated automatically unless otherwise specified)
   - **exp** = expiration (ie. the time the token will expire, measured in Unix time)
 
 - The **Signature** is both the Header and Payload [**Base64Url encoded**](https://bunny.net/academy/http/what-is-base64-encoding-and-decoding/), plus our **secret key** (which we will define later), hashed using the algorithm defined in our Header. 
@@ -47,9 +47,9 @@ const logIn = async(req, res) => {
 }
 ```
 
-- Before moving to the next step, use Postman to make sure all error messages work correctly. Log to the console every step of the way to make sure your variables are what you're expecting them to be. Now we're confident our user is who they say they are, we can generate them a token. I'm going to create a `.js` file in my **utils** folder for **jwt**. It's extremely important to keep the secret key private, so I'll put this into the `.env` file. It just needs to be a string.
+- Before moving to the next step, use Postman to make sure all error messages work correctly. Log to the console every step of the way to make sure your variables are what you're expecting them to be. Now we're confident our user is who they say they are, we can generate them a token. I'm going to create a `.js` file in my `utils` for **jwt**. It's extremely important to keep the secret key private, so I'll put this into the `.env` file. It just needs to be a string.
 
-- This [documentation](https://github.com/auth0/node-jsonwebtoken) will guide us through the rules for signing the token. It's a single function, of which the first two most important arguments will be the payload, and the secret key. We then also have the choice to include some **options**, and a **callback function**. Many of the options overlap with the information that can be saved as claims in the payload, such as the token expiration. Either is fine, just make sure not to use both!! For expiration, you might choose to add an option rather than a claim because the option will accept a string, while the claim needs unix time:
+- This [documentation](https://github.com/auth0/node-jsonwebtoken) will guide us through the rules for signing the token. Let's write a function that recieves the user object as parameters (we'll have to remember to pass this down as an argument when we call it from the logIn function). We'll define the payload, and we also have the choice to include some **options**. Many of the options overlap with the information that can be saved as claims in the payload, such as the token expiration. Either is fine, just make sure not to use both!! (For expiration, you might choose to add an option rather than a claim because the option will accept a string, while the claim needs unix time.) We will then pass all of this, plus our secret key from our `.env`, into the `jwt.sign()` method from the documentation, and return the result:
 
 ```js
 import jwt from "jsonwebtoken";
@@ -57,18 +57,29 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 export const signToken = (user) => {
-  console.log(new Date().setDate(new Date().getDate() + 7))
   const payload = {
     sub: user._id,
     email: user.email,
     avatar: user.avatar,
-    // exp: Math.floor(Date.now() / 1000) // alternate way to add expiry
   }
   const options = {
     expiresIn: "7d",
   };
-  const secretOrPrivateKey = process.env.JWT_SECRET;
-  const token = jwt.sign(payload, secretOrPrivateKey, options)
+  const token = jwt.sign(payload, process.env.JWT_SECRET, options)
   return token
 }
 ```
+
+- Now we've got a token we can return to our front-end. We might as well also return an object we would use to set our active user. Let's write a fetch request from our React app. **Make sure not to return the password (even hashed) to your front-end!!**
+
+- Once we've successfully logged the response from our React App, we will save the token in the Browser Window's **Local Storage**. [Local storage](https://www.w3schools.com/jsref/prop_win_localstorage.asp) refers to how a web application can store data locally. It's similar to a **web cookie**, except that it can only be read by the browser, making it more secure. The storage capacity for local storage is also much higher than for cookies.
+
+- Local storage accepts data as **key/value pairs**. Values saved to Local Storage should be **strings** - if you need to stringify a JavaScript variable, use the `JSON.stringify()` method. To **store** something in the Local Storage, use the method `localStorage.setItem()`. This will accept two arguments: the key, and the stringified value:
+
+```js
+localStorage.setItem("token", result.token);
+```
+
+- To view the local storage in the browser, open the inspector tool and click on **Application**. You can then view all items saved in the local storage for your app. For now, we can create an _imitation_ log in using just the 'user' information sent in the response. Write a function to check whether a token exists and call it in a useEffect from your AuthContext. If a token exists, set the user object state to the 'user' value in the local storage. 
+
+- Tomorrow, we're going to use the token to create a function like the `onAuthStateChanged()` function from Firebase Authentication. If you want to read ahead, you can look up **Bearer Tokens** and [**Passport Strategies**](https://levelup.gitconnected.com/everything-you-need-to-know-about-the-passport-local-passport-js-strategy-633bbab6195).

@@ -18,13 +18,13 @@
 
 - We're still going to use React for our front-end. In a folder that will hold your _whole_ project, create a react app and call it 'client', or 'front-end'. In the same root project folder, create another folder called 'server', or 'back-end'. These will eventually need to be deployed seperately, but we want them all together for development. 
 
-- The create-react-app package automatically initalizes a local git repository for you. Our first step will be to delete it! This is because we actually want git to track the _whole_ project, not just the React files. **cd** into your 'client' folder, and run:
+- The create-react-app package automatically initalizes a local git repository for you. Our first step will be to delete it! This is because we actually want one git repository for our _whole_ project. **cd** into your `client` and run:
 
 ```
 rm -rf .git
 ```
 
-- This should remove the .git file from your React folder. In Windows, you can also manually delete the hidden .git file in Windows Explorer. Once you've removed it, **cd** back into your root folder and initialize a new repository. Now Git is tracking the project from the root level. Create a .gitignore file and add the line **node_modules/**. This will ignore all sub-folders of node_modules, since we will have them in both our 'client' and 'server'. 
+- This should remove the `.git` file from your React folder. In Windows, you can also manually delete the hidden `.git` file in Windows Explorer. Once you've removed it, **cd** back into your root folder and initialize a new repository. Now Git is tracking the project from the root level. Create a `.gitignore` and add the line `node_modules/`. This will ignore all sub-folders of node_modules, since we will have them in both our `client` and `server`. 
 
 ## MongoDB Setup
 
@@ -36,27 +36,27 @@ rm -rf .git
 
 ## Node.js Server Setup
 
-- To start, we want to initalize the project and create a **package.json** file. We do this by opening a terminal, make sure you're in your 'server' folder, and run:
+- To start, we want to initalize the project and create a `package.json` file. We do this by opening a terminal, make sure you're in your 'server' folder, and run:
 
 ```
 npm init
 ```
 
-- You'll then be prompted to establish some information about your project. If you later want to change any of these details, you can edit the package.json. 
+- You'll then be prompted to establish some information about your project. If you later want to change any of these details, you can edit the `package.json`. 
 
-- Next we're going to install [**Express**](https://expressjs.com/en/starter/installing.html), after which you'll notice you now have a node_modules folder, a package-lock.json, and your package.json will have 'express' listed under 'dependencies'.
+- Next we're going to install [**Express**](https://expressjs.com/en/starter/installing.html), after which you'll notice you now have a `node_modules` folder, a `package-lock.json`, and your `package.json` will have 'express' listed under 'dependencies'.
 
 - Not essental, but very useful is [**Nodemon**](https://www.npmjs.com/package/nodemon). Nodemon will automatically restart your server after you save. Without this package, every time you make a change to your server, you'll need to exit and manually restart it for those changes to apply.
 
-- Also not essential, but it will make things look more familiar - on your package.json, add to the main object:
+- Also not essential, but it will make things look more familiar - on your `package.json`, add to the main object:
 
 ```js
 "type": "module"
 ```
 
-- All this does is remove the need to 'require' packages, instead you can just use 'import' the same way we've been using in React. A package.json "type" value of "module" tells Node.js to interpret **.js** files within that package as using [ES module syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+- All this does is remove the need to 'require' packages, instead you can just use 'import' the same way we've been using in React. A package.json "type" value of "module" tells Node.js to interpret `.js` files within that package as using [ES module syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 
-- While we're on the package.json, we can add a script to start our server. Under the 'scripts' property, add a 'start' sub-property and give it the value 'nodemon index.js':
+- While we're on the `package.json`, we can add a script to start our server. Under the 'scripts' property, add a 'start' sub-property and give it the value 'nodemon index.js':
 
 ```js
  "scripts": {
@@ -64,7 +64,7 @@ npm init
   }
 ```
 
-- If we now create an index.js file in the 'server' directory, we can paste the code from the LMS:
+- If we now create an `index.js` in your `server`, we can paste the code from the LMS:
 
 ```js
 import express from "express";
@@ -75,7 +75,7 @@ app.listen(port, () => {
 });
 ```
 
-- To test if we've followed all the steps, run 'npm start' from the terminal in the 'server' directory. Anything logged to the console from the server side will be visible in your server terminal!
+- To test if we've followed all the steps, run `npm start` from `server` directory in your terminal. Anything logged to the console from the server side will be visible in your server terminal!
 
 - We'll also want to add some **Middlewares** to help us out: **express.json** and **express.urlencoded** are already installed from the Express package, we need them for when we start using POST requests. We'll need to install the [**CORS**](https://expressjs.com/en/resources/middleware/cors.html) npm package, which will enable CORS in our app. Then, we can configure our app to use them from our index.js file. Make sure the app knows to **use** them _before_ it starts **listening**:
 
@@ -91,7 +91,7 @@ app.use(
 app.use(cors());
 ```
 
-- Another non-essential (but very convenient) package you can install is [**concurrently**](https://www.npmjs.com/package/concurrently). This will let us launch both our back-end server and our React server with just one command. Otherwise, you'll need to have two terminals open - one for each. You can adapt the following script to whatever you find most convenient:
+- Another non-essential (but _very_ convenient) package you can install is [**concurrently**](https://www.npmjs.com/package/concurrently). This will let us launch both our back-end server and our React server with just one command. Otherwise, you'll need to have two terminals open - one for each. You can adapt the following script to whatever you find most convenient:
 
 ```js
 "scripts": {
@@ -99,4 +99,4 @@ app.use(cors());
     }
 ```
 
-**note** if you write your own custom script, you'll have to use 'npm run scriptName' from the terminal.
+**note** if you write your own custom script, you'll have to use `npm run scriptName` from the terminal.

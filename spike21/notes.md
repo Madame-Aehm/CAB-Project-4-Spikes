@@ -10,7 +10,7 @@
 
 - To follow the example given in the LMS, each user can have pets - they could have no pets, one pet, or multiple pets. This is known as a **one to many** relationship. The pets will be held in a seperate collection, each pet is it's own document. Each pet can have only one owner, and a pet cannot exist without an owner. This is known as a **many to one** relationship. 
 
-- We will need to create a Schema and Model for our pets, along with a routes and controller document to hold the routes and functions. I'll also need to update my userSchema to include a property for pets. Where the documents reference each other, we'll put **type: mongoose.Schema.Types.ObjectId** (this could be condensed into a variable for more readable code), and a **ref** property, that will reference the **singular**, **lower-case** name of the collection. eg:
+- We will need to create a Schema and Model for our pets, along with a routes and controller document to hold the routes and functions. I'll also need to update my userSchema to include a property for pets. Where the documents reference each other, we'll put type: `mongoose.Schema.Types.ObjectId` (this could be condensed into a variable for more readable code), and a **ref** property, that will reference the **singular**, **lower-case** name of the collection. eg:
 
 ```js
 const objectId = mongoose.Schema.Types.ObjectId;
@@ -41,6 +41,7 @@ const getUserById = async(req, res) => {
 const getAllWithOwner = async(req, res) => {
   try {
     const pets = await Pet.find().populate({ path: 'owner', select: ['firstName', 'lastName'] });
+    // const pets = await Pet.find().populate('owner', ['firstName', 'lastName']); // without object format
     res.status(200).json(pets);
   } catch (e) {
     console.log(e);
@@ -64,7 +65,7 @@ router.post("/new", newUser);
 
 - I can now add some data to send with my request. This can be as much or as little as I want, so I'll start with just a message to say 'this is the body'. Because it is JSON formatted, it must follow these rules: the body must be a JavaScript object, property name must be enclosed by quotation marks, value can be a JavaScript value (string, number, array, object, etc.)
 
-- Create an object that you would send through as a new user - make sure it follows the Schema defined for the collection. Build a new object in your function using those properties and save it as a new Model. Now you can use Mongoose's **.save()** method to save it to the collection linked to that Model. The save method returns the document:
+- Create an object that you would send through as a new user - make sure it follows the Schema defined for the collection. Build a new object in your function using those properties and save it as a new Model. Now you can use Mongoose's `.save()` method to save it to the collection linked to that Model. The save method returns the document:
 
 ```js
 const createUser = async(req, res) => {
@@ -97,7 +98,7 @@ const createUser = async(req, res) => {
 
 - Now that we've got an object to submit, let's look at Postman's sample code. On the very right-hand side, click on the **</>** button in the sidebar. We can copy and paste this code section by section and adapt it to our own project. Put some signal after the fetch to communicate to your user if the registration was successful, then test it. We can then check our database to see if our new user is there. 
 
-- The same logic can be applied to update a user. I could set a route that recieves an ID as params, then write a function that uses Mongoose's **findByIdAndUpdate()**:
+- The same logic can be applied to update a user. I could set a route that recieves an ID as params, then write a function that uses Mongoose's `findByIdAndUpdate()`:
 
 ```js
 const updateUser = async(req, res) => {

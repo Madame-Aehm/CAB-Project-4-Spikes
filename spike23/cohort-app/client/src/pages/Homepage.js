@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 function Homepage() {
+  const { user, logout } = useContext(AuthContext);
   const [scouts, setScouts] = useState([]);
   useEffect(() => {
     const getScouts = async() => {
@@ -19,8 +21,10 @@ function Homepage() {
   return (
     <div>
       <h1>MERN Homepage</h1>
-      <Link to='register' style={{ marginRight: "1em" }}>Register</Link>
-      <Link to='login'>Log in</Link>
+      { user ? <b style={{ cursor: "pointer" }} onClick={logout}>Logout</b>
+        : <><Link to='register' style={{ marginRight: "1em" }}>Register</Link>
+        <Link to='login'>Log in</Link></> }
+      
       { scouts.map((scout) => {
         return (
           <p key={scout._id}>{scout.firstName} {scout.lastName}</p>

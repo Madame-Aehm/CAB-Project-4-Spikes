@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 function Login() {
+  const { login } = useContext(AuthContext);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -13,25 +15,7 @@ function Login() {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    try {
-      const headers = new Headers();
-      headers.append("Content-Type", "application/x-www-form-urlencoded");
-      const urlencoded = new URLSearchParams();
-      urlencoded.append("email", form.email);
-      urlencoded.append("password", form.password);
-      const options = {
-        method: 'POST',
-        headers: headers,
-        body: urlencoded
-      };
-      const response = await fetch("http://localhost:5000/api/user/login", options);
-      const result = await response.json();
-      localStorage.setItem("token", result.token);
-      localStorage.setItem("user", JSON.stringify(result.user));
-      alert("token saved")
-    } catch(e) {
-      console.log(e)
-    }
+    login(form.email, form.password);
   }
 
   return (

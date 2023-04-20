@@ -106,7 +106,7 @@ export const signToken = (user) => {
 
 - Now we've got a token we can return to our front-end. We might as well also return an object we would use to set our active user. Let's write a fetch request from our React app. **Make sure not to return the password (even hashed) to your front-end!!**
 
-- Once we've successfully logged the response from our React App, we will save the token in the Browser Window's **Local Storage**. [Local storage](https://www.w3schools.com/jsref/prop_win_localstorage.asp) refers to how a web application can store data locally. It's similar to a **web cookie**, except that it can only be read by the browser, making it more secure. The storage capacity for local storage is also much higher than for cookies.
+- Create an AuthContext with a 'user' object and write a log in function to get this response from our React App. Once we've succeeded, we will save the token in the Browser Window's **Local Storage**. [Local storage](https://www.w3schools.com/jsref/prop_win_localstorage.asp) refers to how a web application can store data locally. It's similar to a **web cookie**, except that it can only be read by the browser, making it more secure. The storage capacity for local storage is also much higher than for cookies.
 
 - Local storage accepts data as **key/value pairs**. Values saved to Local Storage should be **strings** - if you need to stringify a JavaScript variable, use the `JSON.stringify()` method. To **store** something in the Local Storage, use the method `localStorage.setItem()`. This will accept two arguments: the key, and the stringified value:
 
@@ -114,6 +114,24 @@ export const signToken = (user) => {
 localStorage.setItem("token", result.token);
 ```
 
-- To view the local storage in the browser, open the inspector tool and click on **Application**. You can then view all items saved in the local storage for your app. For now, we can create an _imitation_ log in using just the 'user' information sent in the response. Write a function to check whether a token exists and call it in a useEffect from your AuthContext. If a token exists, set the user object state to the 'user' value in the local storage. 
+- To view the local storage in the browser, open the inspector tool and click on **Application**. You can then view all items saved in the local storage for your app. For now, we can create an _imitation_ log in using just the 'user' information sent in the response. Write a function to check whether a token exists and call it in a useEffect from your AuthContext. We can access items in the local storage with the method `localStorage.getItem()`. If a token exists, set the user object state:
 
-- Tomorrow, we're going to use the token to create a function like the `onAuthStateChanged()` function from Firebase Authentication. If you want to read ahead, you can look up **Bearer Tokens** and [**Passport Strategies**](https://levelup.gitconnected.com/everything-you-need-to-know-about-the-passport-local-passport-js-strategy-633bbab6195).
+```js
+const checkForUser = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    setUser(true)
+  }
+}
+```
+
+- A log out function would need to set the user state back to `false` or `null`, but we'll also need to remove the token from local storage:
+
+```js
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  }
+```
+
+- Tomorrow, we're going to use the token to create a function like the `onAuthStateChanged()` function from Firebase Authentication. Once an authorized status is confirmed, we will attach the token to the Header of all fetch requests being made to routes requiring authorization. If you want to read ahead, you can look up **Bearer Tokens** and [**Passport Strategies**](https://www.passportjs.org/), specifically [JWT Passport Strategy](https://www.passportjs.org/packages/passport-jwt/).

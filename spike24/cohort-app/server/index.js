@@ -7,6 +7,8 @@ import usersRouter from './routes/users.js'
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import cloudinaryConfig from "./config/cloudinary.js";
+import passport from "passport";
+import { passportConfig } from "./config/passport.js";
 
 dotenv.config();
 
@@ -24,6 +26,8 @@ app.use(
 );
 app.use(cors());
 cloudinaryConfig();
+app.use(passport.initialize());
+passportConfig();
 app.use((req, res, next) => {
   console.log(req.path, req.method);
   next();
@@ -34,6 +38,8 @@ app.use((req, res, next) => {
 app.get('/hello', (req, res) => {
   res.send('Hello World!')
 })
+
+console.log("testing")
 
 
 //define base api base routes

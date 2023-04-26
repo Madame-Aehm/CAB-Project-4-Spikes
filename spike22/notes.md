@@ -8,7 +8,7 @@
 
 - On your Dashboard, you'll be able to see the Cloud Name, your API Key, and your API Secret. We'll save these variables in our `.env` file. Then create a folder in your server for **config**, to hold configuration files. This is just to save space on our `index.js`. In a `.js` file for **cloudinaryConfig**, copy and paste the config code snippet from the 'getting started' page in Cloudinary docs, just make sure to replace each of the variables for your `process.env` variables. Export this as a function, which we will call on the `index.js` together with the middlewares. 
 
-- We'll also need to update our user Schema to include an image. This will just be a string URL for the image that we will already have uploaded to Cloudinary. This is a good opportunity to demonstrate the 'default' property, which I'll set to the URL of the sample image I already uploaded. If this property isn't included on the user object, or the value is set to **undefined**, then the default will be applied. Any other value (including **null** or an empty string) will still be stored in the database!
+- We'll also need to update our user Schema to include an image. This will just be a string URL for the image that we will already have uploaded to Cloudinary. This is a good opportunity to demonstrate the [default property](https://mongoosejs.com/docs/defaults.html), which I'll set to the URL of the sample image I already uploaded. If this property isn't included on the user object, or the value is set to **undefined**, then the default will be applied. Any other value (including **null** or an empty string) will still be stored in the database!
 
 - We're going to create a function using [Multer](https://github.com/expressjs/multer#readme) to act as middleware on any routes that will recieve a file to be uploaded. This won't be our only middleware, so create a folder for 'middlewares', and then create a `.js` file for all multer functions (you might decide to write more, later). Here, we'll write and export this function:
 
@@ -16,7 +16,7 @@
 import multer from "multer";
 import path from "path";
 
-export const multerUploads = multer({
+export const multerUpload = multer({
   storage: multer.diskStorage({}),
   fileFilter: (req, file, cb) => {
     let extension = path.extname(file.originalname);

@@ -24,4 +24,6 @@
 
 - In order to use Passport to authenticate the requests, we'll have to use `passport.authenticate()`. We specify the strategy with the string `"jwt"`, and we're not using a session, so we can set this to false. To keep functionality consistent, we can make a new `.js` file in our `middlewares` for jwt to hold this snippet as a variable. 
 
-- If I set this to any of my routes and try to send a request without adding a header, let's see what happens. 38mins
+- If I set this to any of my routes and try to send a request without adding a header, let's see what happens. Create a route to get a user's profile, for now the controller function will just return a string to indicate success.
+
+- Now let's see what happens when I _do_ set the header.

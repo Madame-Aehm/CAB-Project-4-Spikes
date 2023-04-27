@@ -9,17 +9,16 @@ const options = {
   secretOrKey: process.env.JWT_SECRET
 }
 
-const strategy = new JwtStrategy(options, function(jwt_payload, done) {
-  User.findById(jwt_payload.sub, function(err, user) {
-      if (err) {
-          return done(err, false);
-      }
-      if (user) {
-          return done(null, user);
-      } else {
-          return done(null, false);
-      }
-  });
+const strategy = new JwtStrategy(options, async(jwt_payload, done) => {
+  User.findById(jwt_payload.sub)
+    .then((user) => {
+      console.log(user);
+      done(null, user)
+    })
+    .catch((error) => {
+      console.log(error);
+      done(error, false)
+    });
 })
 
 export const passportConfig = () => {

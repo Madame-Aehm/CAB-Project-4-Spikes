@@ -8,7 +8,7 @@ interface User {
 
 interface AuthContextValue {
   user: User | null,
-  login(email: string, password: string): Promise<void>,
+  login(email: string, password: string): void,
 }
 
 // const initialAuth: AuthContextValue = {

@@ -73,4 +73,8 @@ const logIn = async(req, res) => {
   }
 }
 
-export { getUserById, createUser, updateUser, logIn }
+const getProfile = async(req, res) => {
+  res.send("success!")
+}
+
+export { getUserById, createUser, updateUser, logIn, getProfile }

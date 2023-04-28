@@ -74,7 +74,7 @@ const logIn = async(req, res) => {
 }
 
 const getProfile = async(req, res) => {
-  res.send("success!")
+  res.send(req.user);
 }
 
 export { getUserById, createUser, updateUser, logIn, getProfile }

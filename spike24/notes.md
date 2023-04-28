@@ -18,7 +18,40 @@
     - The callback function takes the **JWT payload**, and _another_ callback function which they've called `done` 
     - The `done` will determine what happens when the token is either accepted or rejected (think back to the `cb` from our Multer function)
 
-- Create the export function, call it something like 'configurePassport', then paste the example code inside. We're actually not going to have to change all that much - just make sure 'User' is your **User Model** (you'll need to import it), and that your payload has a user Id as the 'sub'. Mongoose [documentation](https://mongoosejs.com/docs/api/model.html#Model.findById()) recommends when finding by Id, to use `findById()` instead of `findOne()`, so I'm going to fix that. We could seperate the `new JwtStrategy()` into a seperate variable to make everything a little bit more readable.
+- Create the export function, call it something like 'configurePassport', then paste the example code inside. Unfortunately for us, the newest version of Mongoose no longer allows callbacks in their functions, which means we're going to have to change a few things:
+    - Make sure 'User' is your **User Model** (you'll need to import it), and that your payload has a user Id as the 'sub'. 
+    - Mongoose [documentation](https://mongoosejs.com/docs/api/model.html#Model.findById()) recommends when finding by Id, to use `findById()` instead of `findOne()`, so I'm going to fix that. 
+    - Instead of a callback, we're going to have to use **async/await** or **.then()/.catch()** blocks
+    - We could seperate the `new JwtStrategy()` into a seperate variable to make everything a little bit more readable:
+
+```js
+import passport from 'passport';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { User } from '../models/users.js'
+import * as dotenv from "dotenv";
+dotenv.config();
+
+const options = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET
+}
+
+const strategy = new JwtStrategy(options, async(jwt_payload, done) => {
+  try {
+    const existingUser = await User.findById(jwt_payload.sub);
+    existingUser ? done(null, existingUser) : done(null, false)
+  } catch(error) {
+    done(error, false)
+  }
+//   User.findById(jwt_payload.sub)         //alternative
+//     .then((user) => user ? done(null, user) : done(null, false))
+//     .catch((error) => done(error, false));
+})
+
+export const passportConfig = () => {
+  passport.use(strategy);
+}
+```
 
 - Import this function into the server `index.js` and call it after the Passport initalization. We've now initalized and configured Passport in our app!
 

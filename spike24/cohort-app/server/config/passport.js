@@ -10,15 +10,16 @@ const options = {
 }
 
 const strategy = new JwtStrategy(options, async(jwt_payload, done) => {
-  User.findById(jwt_payload.sub)
-    .then((user) => {
-      console.log(user);
-      done(null, user)
-    })
-    .catch((error) => {
-      console.log(error);
-      done(error, false)
-    });
+  try {
+    const existingUser = await User.findById(jwt_payload.sub);
+    existingUser ? done(null, existingUser) : done(null, false);
+  } catch(error) {
+    console.log(error)
+    done(error, false)
+  }
+  // User.findById(jwt_payload.sub)
+  //   .then((user) => done(null, user))
+  //   .catch((error) => done(error, false));
 })
 
 export const passportConfig = () => {

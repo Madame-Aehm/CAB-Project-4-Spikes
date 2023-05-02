@@ -86,7 +86,7 @@ localStorage.setItem("token", result.token);
 const checkForToken = () => {
   const token = localStorage.getItem("token");
   if (token) {
-    setUser(true)
+    setUser(true) 
   }
 }
 ```

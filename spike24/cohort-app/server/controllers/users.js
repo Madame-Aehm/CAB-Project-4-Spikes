@@ -74,7 +74,12 @@ const logIn = async(req, res) => {
 }
 
 const getProfile = async(req, res) => {
-  res.send(req.user);
+  const activeUser = {
+    email: req.user.email,
+    username: req.user.username,
+    avatar: req.user.avatar
+  }
+  res.send(activeUser);
 }
 
 export { getUserById, createUser, updateUser, logIn, getProfile }

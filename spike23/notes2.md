@@ -23,6 +23,8 @@ export const encryptPassword = async(password) => {
 
 - We now want to import and call this function on our password _before_ we send it to the database. Make sure to use **await**, since it is an asynchronous function!
 
+## Password Verification
+
 - We will need to use `bycrypt.compare()` to check whether a plain text and a hashed text are actually the same string. We'll write and export a short function now, so that it's there for us when we want create a user log-in. This function will return **true** or **false**:
 
 ```js
@@ -31,6 +33,40 @@ export const verifyPassword = async (password, hashedPassword) => {
   return verified;
 };
 ```
+
+- Now, we can write an endpoint and controller function to log in. The front-end will need to send an email and a password in the body of the request. In our controller function, we first need to find a user that matches the email - we can use Mongoose's `findOne()` method for this. If no user is found, then we can return an error. If a user _is_ found, we now want to **compare** the password from the user object in the database with the password sent by our front-end. Use the `verifyPassword()` function we created to do this. If the result is `false`, then we send back an error. If it's `true`, then the user identity has been verified and we can send back a positive response. Later, we'll be sending back an authorization token, but for now, this can be just an object that holds the user data:
+
+```js
+const login = async(req, res) => {
+  try {
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (!existingUser) {
+      res.status(404).json({error: "no user found"})
+    }
+    if (existingUser) {
+      const verified = await verifyPassword(req.body.password, existingUser.password);
+      if (!verified) {
+        res.status(406).json({ error: "password doesn't match" })
+      }
+      if (verified) {
+        res.status(200).json({
+          verified: true,
+          user: {
+            _id: existingUser._id,
+            username: existingUser.username,
+            pets: existingUser.pets,
+            avatar: existingUser.avatar
+          }
+        })
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "something went wrong.." })
+  }
+}
+```
+
 
 ## React Context with Typescript
 

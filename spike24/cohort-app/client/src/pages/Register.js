@@ -24,6 +24,7 @@ function Register() {
     formdata.append("avatar", form.avatar);
     const requestOptions = {
       method: 'POST',
+      headers: new Headers(),
       body: formdata,
       redirect: 'follow'
     };

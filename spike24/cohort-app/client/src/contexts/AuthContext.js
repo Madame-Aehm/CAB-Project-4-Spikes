@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import getToken from "../utils/getToken";
 
 export const AuthContext = createContext();
 
@@ -6,13 +7,33 @@ export const AuthContextProvider = (props) => {
   const [user, setUser] = useState(null);
   console.log("active user:", user);
 
-  const checkForUser = () => {
-    const token = localStorage.getItem("token");
-    const tempUserData = localStorage.getItem("user");
-    if (tempUserData && token) {
-      const parsedUser = JSON.parse(tempUserData);
-      setUser(parsedUser);
+  const getActiveUser = async (token) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders
+      };
+    try {
+      const response = await fetch("http://localhost:5000/api/user/me", requestOptions);
+      const result = await response.json();
+      setUser(result);
+    } catch (error) {
+      console.log(error)
+      setUser(null);
     }
+  }
+
+  const checkForUser = () => {
+    const token = getToken();
+    if (token) {
+      getActiveUser(token)
+    }
+    // const tempUserData = localStorage.getItem("user");
+    // if (tempUserData && token) {
+    //   const parsedUser = JSON.parse(tempUserData);
+    //   setUser(parsedUser);
+    // }
   }
 
   const login = async(email, password) => {
@@ -35,7 +56,7 @@ export const AuthContextProvider = (props) => {
         setUser(null);
       } else {
         localStorage.setItem("token", result.token);
-        localStorage.setItem("user", JSON.stringify(result.user));
+        // localStorage.setItem("user", JSON.stringify(result.user));
         alert("token saved");
         setUser(result.user);
       }

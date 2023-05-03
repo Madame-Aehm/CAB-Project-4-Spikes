@@ -14,9 +14,9 @@ const getAllPets = async(req, res) => {
   }
 }
 
-const getAllWithOwner = async(req, res) => {
+const getAllPetsPopulated = async(req, res) => {
   try {
-    const pets = await Pet.find().populate('owner', ['firstName', 'lastName']);
+    const pets = await Pet.find().populate('owner', ['username', 'email']);
     res.status(200).json(pets);
   } catch (e) {
     console.log(e);
@@ -24,4 +24,4 @@ const getAllWithOwner = async(req, res) => {
   }
 }
 
-export { test, getAllPets, getAllWithOwner }
+export { test, getAllPets, getAllPetsPopulated }

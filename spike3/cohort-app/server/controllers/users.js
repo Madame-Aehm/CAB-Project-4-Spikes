@@ -14,7 +14,7 @@ const getAllUsers = async (req, res) => {
   }
 }
 
-const searchSingleUser = async (req, res) => {
+const getUserByEmail = async (req, res) => {
   // console.log(req.params);
   try {
     const user = await User.findOne({ email: req.params.email });
@@ -35,4 +35,20 @@ const searchSingleUser = async (req, res) => {
   }
 }
 
-export { test, getAllUsers, searchSingleUser }
+const registerUser = async(req, res) => {
+  console.log(req.body)
+  if (!req.body.email|| !req.body.password || !req.body.username) return res.status(406).json({ error: "Please fill out all fields" })
+  const newUser = new User({
+    ...req.body
+  });
+  try {
+    const result = await newUser.save();
+    res.status(200).json(result)
+  } catch(e) {
+    console.log(e)
+    e.code === 11000 ? res.status(406).json({ error: "That email is already registered" }) 
+    : res.status(500).json({ error: "Unknown error occured", ...e })
+  }
+}
+
+export { test, getAllUsers, getUserByEmail, registerUser }

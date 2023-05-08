@@ -8,8 +8,8 @@
 
 ## Spike 4 - Image Upload
 
-## Password Encryption + Context with Typescript
+## Spike 5 - Password Encryption + Context & Custom Hooks with Typescript
 
-## Authentication
+## Spike 6 - Authentication
 
-## Spike 24 - Authorization
+## Spike 7 - Authorization

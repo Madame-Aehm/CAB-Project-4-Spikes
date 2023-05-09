@@ -39,13 +39,11 @@ app.get('/hello', (req, res) => {
   res.send('Hello World!')
 })
 
-console.log("testing")
-
 
 //define base api base routes
 app.use('/api/scouts', scoutsRouter);
 app.use('/api/pets', petsRouter);
-app.use('/api/user', usersRouter);
+app.use('/api/users', usersRouter);
 app.use('*', (req, res) => res.status(404).json({ error: "Endpoint not found." }));
 
 

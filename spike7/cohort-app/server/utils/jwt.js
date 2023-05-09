@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-export const signToken = (user) => {
+export const generateToken = (user) => {
   const payload = {
     sub: user._id,
     email: user.email,

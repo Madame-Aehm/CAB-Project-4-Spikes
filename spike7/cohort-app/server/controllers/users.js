@@ -13,7 +13,17 @@ const getAllUsers = async (req, res) => {
     res.status(200).json(allUsers);
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: e.message })
+    res.status(500).json({ error: e })
+  }
+}
+
+const getUserById = async(req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.status(200).json(user);
+  } catch(e) {
+    console.log(e);
+    res.status(500).send({ error: e.message });
   }
 }
 
@@ -35,17 +45,7 @@ const getUserByEmail = async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-    res.status(500).json(e);
-  }
-}
-
-const getUserById = async(req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    res.status(200).json(user);
-  } catch(e) {
-    console.log(e);
-    res.status(500).send({ error: e.message });
+    res.status(500).json({ error: e.message });
   }
 }
 
@@ -64,14 +64,22 @@ const registerUser = async(req, res) => {
   } catch(e) {
     console.log(e)
     e.code === 11000 ? res.status(406).json({ error: "That email is already registered" }) 
-    : res.status(500).json({ error: e.message })
+    : res.status(500).json({ error: "Unknown error occured", ...e })
   }
 }
 
 const updateUser = async(req, res) => {
-  const { id } = req.params;
+  const changes = { ...req.body };
+  if (req.file) {
+    const uploadedImage = await imageUpload(req.file, "user_avatars");
+    changes.avatar = uploadedImage;
+  }
+  if (req.password) {
+    const encryptedPassword = await encryptPassword(req.body.password);
+    changes.password = encryptedPassword;
+  }
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, changes, { new: true });
     res.status(200).json(updatedUser);
   } catch(e) {
     console.log(e);
@@ -109,4 +117,15 @@ const logIn = async(req, res) => {
   }
 }
 
-export { getUserById, updateUser, test, getAllUsers, getUserByEmail, registerUser, logIn }
+const getProfile = async(req, res) => {
+  const activeUser = {
+    _id: req.user._id,
+    email: req.user.email,
+    username: req.user.username,
+    avatar: req.user.avatar,
+    pets: req.user.pets
+  }
+  res.send(activeUser);
+}
+
+export { test, getAllUsers, getUserByEmail, getUserById, registerUser, updateUser, logIn, getProfile }

@@ -1,3 +1,5 @@
+import conn from "../models/connection.js";
+import { Pet } from "../models/pets.js";
 import { User } from "../models/users.js";
 import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
 import { imageUpload } from "../utils/imageManagement.js";
@@ -128,4 +130,56 @@ const getProfile = async(req, res) => {
   res.send(activeUser);
 }
 
-export { test, getAllUsers, getUserByEmail, getUserById, registerUser, updateUser, logIn, getProfile }
+const tradePets = async(req, res) => {
+  const { reqUserId, offerUserId, reqPetId, offerPetId } = req.body;
+  if (!reqUserId || !offerUserId || !reqPetId || !offerPetId) return res.status(500).json({ error: "One or more required property is missing" });
+  try {
+    const reqPet = await Pet.findById(reqPetId);
+    const offerPet = await Pet.findById(offerPetId);
+    const reqPetValid = reqPet.owner.equals(reqUserId);
+    const offerPetValid = offerPet.owner.equals(offerUserId);
+    if (!offerPetValid || !reqPetValid) return res.status(500).json({ error: "Conflict in trade" });
+    const session = await conn.startSession();
+    try {
+      session.startTransaction();
+      await User.findByIdAndUpdate(reqUserId, {
+        $push: { pets: offerPetId },
+      }, { session: session });
+      console.log("1");
+      await User.findByIdAndUpdate(reqUserId, {
+        $pull: { pets: reqPetId }
+      }, { session: session });
+      console.log("2");
+      await User.findByIdAndUpdate(offerUserId, {
+        $push: { pets: reqPetId },
+      }, { session: session });
+      console.log("3");
+      await User.findByIdAndUpdat(offerUserId, {
+        $pull: { pets: offerPetId }
+      }, { session: session });
+      console.log("4");
+      await Pet.findByIdAndUpdate(reqPetId, {
+        owner: offerUserId
+      }, { session: session });
+      console.log("5");
+      await Pet.findByIdAndUpdate(offerPetId, {
+        owner: reqUserId
+      }, { session: session });
+      console.log("6");
+      await session.commitTransaction();
+      res.status(200).json("Success!")
+    } catch (error) {
+      console.log(error);
+      await session.abortTransaction();
+      res.status(500).json({ error: "Trade failed" })
+    } finally {
+      session.endSession();
+      console.log("session ended")
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Trade failed" })
+  }
+}
+
+export { test, getAllUsers, getUserByEmail, getUserById, registerUser, updateUser, logIn, getProfile, tradePets }

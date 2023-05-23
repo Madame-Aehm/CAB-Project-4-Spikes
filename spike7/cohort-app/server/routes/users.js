@@ -1,5 +1,5 @@
 import express from 'express'
-import { test, getProfile, getUserById, logIn, updateUser, registerUser, getAllUsers, getUserByEmail } from '../controllers/users.js';
+import { test, getProfile, getUserById, logIn, updateUser, registerUser, getAllUsers, getUserByEmail, tradePets } from '../controllers/users.js';
 import { multerUploads } from '../middlewares/multer.js';
 import jwtAuth from '../middlewares/jwt.js';
 
@@ -15,6 +15,9 @@ router.get("/me", jwtAuth, getProfile);
 router.post("/register", multerUploads.single("avatar"), registerUser);
 router.post("/login", logIn);
 router.post("/update", jwtAuth, multerUploads.single("avatar"), updateUser);
+
+router.post("/trade", tradePets);
+
 
 
 

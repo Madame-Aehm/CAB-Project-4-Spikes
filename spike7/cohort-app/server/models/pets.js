@@ -7,7 +7,7 @@ const petSchema = new mongoose.Schema({
   name: { type: String, required: true },
   desexed: { type: Boolean, required: true },
   age: { type: Number, required: true },
-  owner: { type: objectId, ref: 'scout', required: true }
+  owner: { type: objectId, ref: 'user', required: true }
 });
 
 export const Pet = mongoose.model("pet", petSchema);

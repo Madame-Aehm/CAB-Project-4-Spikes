@@ -15,7 +15,7 @@ const getAllUsers = async (req, res) => {
     res.status(200).json(allUsers);
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: e })
+    res.status(500).json({ error: e.message })
   }
 }
 
@@ -131,41 +131,41 @@ const getProfile = async(req, res) => {
 }
 
 const tradePets = async(req, res) => {
-  const { reqUserId, offerUserId, reqPetId, offerPetId } = req.body;
+  const reqUserId = req.user._id;
+  const { offerUserId, reqPetId, offerPetId } = req.body;
   if (!reqUserId || !offerUserId || !reqPetId || !offerPetId) return res.status(500).json({ error: "One or more required property is missing" });
   try {
     const reqPet = await Pet.findById(reqPetId);
     const offerPet = await Pet.findById(offerPetId);
+    const reqUser = await User.findById(reqUserId);
+    const offerUser = await User.findById(offerUserId);
     const reqPetValid = reqPet.owner.equals(reqUserId);
     const offerPetValid = offerPet.owner.equals(offerUserId);
-    if (!offerPetValid || !reqPetValid) return res.status(500).json({ error: "Conflict in trade" });
+    const reqUserValid = reqUser.pets.some((pet) => pet.equals(reqPetId));
+    const offerUserValid = offerUser.pets.some((pet) => pet.equals(offerPetId));
+    if (!offerPetValid || !reqPetValid || !reqUserValid || !offerUserValid) return res.status(500).json({ error: "Conflict in trade" });
     const session = await conn.startSession();
     try {
       session.startTransaction();
-      await User.findByIdAndUpdate(reqUserId, {
-        $push: { pets: offerPetId },
-      }, { session: session });
+
+      reqUser.pets.push(offerPetId);
+      reqUser.pets.pull(reqPetId);
+      await reqUser.save({ session });
       console.log("1");
-      await User.findByIdAndUpdate(reqUserId, {
-        $pull: { pets: reqPetId }
-      }, { session: session });
+
+      offerUser.pets.push(reqPetId);
+      offerUser.pets.pull(offerPetId);
+      await offerUser.save({ session });
       console.log("2");
-      await User.findByIdAndUpdate(offerUserId, {
-        $push: { pets: reqPetId },
-      }, { session: session });
+
+      reqPet.owner = offerUserId;
+      await reqPet.save({ session });
       console.log("3");
-      await User.findByIdAndUpdat(offerUserId, {
-        $pull: { pets: offerPetId }
-      }, { session: session });
+
+      offerPet.owner  = reqUserId;
+      await offerPet.save({ session });
       console.log("4");
-      await Pet.findByIdAndUpdate(reqPetId, {
-        owner: offerUserId
-      }, { session: session });
-      console.log("5");
-      await Pet.findByIdAndUpdate(offerPetId, {
-        owner: reqUserId
-      }, { session: session });
-      console.log("6");
+      
       await session.commitTransaction();
       res.status(200).json("Success!")
     } catch (error) {

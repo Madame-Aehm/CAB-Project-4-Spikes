@@ -61,7 +61,7 @@ const Homepage = (props: Props) => {
   // const { data: catFacts, isLoading: catFactsIsLoading, error: catFactsError } = useGet<CatFactsArray>("https://catfact.ninja/facts");
   // const { data: catFact, isLoading: catFactLoading, error: catFactError } = useGet<CatFactType>("https://catfact.ninja/fact");
   const { data: users, isLoading: usersIsloading, error: usersError } = useGet<Users>(`${process.env.REACT_APP_BASE_URL}users/all`);
-  const { data: foundUser, isLoading: foundIsLoading, error: foundError } = useGet<FoundUser>(`${process.env.REACT_APP_BASE_URL}users/email/${submitValue}`)
+  // const { data: foundUser, isLoading: foundIsLoading, error: foundError } = useGet<FoundUser>(`${process.env.REACT_APP_BASE_URL}users/email/${submitValue}`)
 
   const handleSubmit = () => {
     setSubmitValue(inputValue);
@@ -70,7 +70,7 @@ const Homepage = (props: Props) => {
   const userCardStyle = { border: "solid 1px black", padding: "0.5em", marginBottom: "1em", width: "50%" }
   return (
     <div>
-      <h1>MERN App</h1>
+      {/* <h1>MERN App</h1>
       <h3>These are all the users in my Database:</h3>
       { usersIsloading && <p>Loading...</p> }
       { usersError && <p>{usersError}</p> }
@@ -96,7 +96,7 @@ const Homepage = (props: Props) => {
         }
         { foundError && <p>{foundError}</p> }
         { foundIsLoading && <p>Loading...</p> }
-      </div>
+      </div> */}
       {/* <h1>Cat Facts Fetch Hook Test</h1>
       { (catFactsIsLoading || catFactLoading) && <p>Loading...</p> }
       { (catFactsError || catFactError) && <p>{catFactsError || catFactError}</p> }

@@ -16,7 +16,7 @@ router.post("/register", multerUploads.single("avatar"), registerUser);
 router.post("/login", logIn);
 router.post("/update", jwtAuth, multerUploads.single("avatar"), updateUser);
 
-router.post("/trade", tradePets);
+router.post("/trade", jwtAuth, tradePets);
 
 
 

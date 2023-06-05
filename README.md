@@ -2,6 +2,8 @@
 
 ## Spike 1 - MERN Project Kick Off, Project Structure + Initial Setup
 
+## Typescript
+
 ## Spike 2 - Express Server + Mongoose
 
 ## Spike 3 - Populate + POST Requests

@@ -1,8 +1,10 @@
 # Project 4
 
-## Spike 1 - MERN Project Kick Off, Project Structure + Initial Setup
+## Typescript p1
 
-## Typescript
+## Typescrpt p2
+
+## Spike 1 - MERN Project Kick Off, Project Structure + Initial Setup
 
 ## Spike 2 - Express Server + Mongoose
 

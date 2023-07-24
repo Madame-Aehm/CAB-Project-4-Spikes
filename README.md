@@ -1,9 +1,5 @@
 # Project 4
 
-## Typescript p1
-
-## Typescrpt p2
-
 ## Spike 1 - MERN Project Kick Off, Project Structure + Initial Setup
 
 ## Spike 2 - Express Server + Mongoose
@@ -12,9 +8,7 @@
 
 ## Spike 4 - Image Upload
 
-## Spike 5 - Password Encryption + Context & Custom Hooks with Typescript
-
-## Spike 6 - Authentication
+## Spike 6 - Authentication + Password Encryption
 
 ## Spike 7 - Authorization
 

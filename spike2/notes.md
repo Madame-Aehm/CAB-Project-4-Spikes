@@ -16,7 +16,7 @@ Since this project is going to be quite large, we're going to separate it into d
 
 In our `userRoutes.js` file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
 
-- Use this Router Instance to set up a test 'get' route. Make sure to also export the router instance: 
+Use this Router Instance to set up a test 'get' route. Make sure to also export the router instance: 
 
 ```js
 import express from 'express'
@@ -96,11 +96,11 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true })
 ```
 
-- There is huge potential for creating incredibly complex and specific Schemas. For more info, have a read of the [docs](https://mongoosejs.com/docs/guide.html).
+There is huge potential for creating incredibly complex and specific Schemas. For more info, have a read of the [docs](https://mongoosejs.com/docs/guide.html).
 
-- Let's create a collection for 'users' on MongoDB and then manually add some documents. Make sure each document conforms to the Schema, and be very careful not to make any typos. Remember that your collection should have a **lower-case**, **plural** name.
+Let's create a collection for 'users' on MongoDB and then manually add some documents. Make sure each document conforms to the Schema, and be very careful not to make any typos. Remember that your collection should have a **lower-case**, **plural** name.
 
-- Back on our `userModel.js` file, using another property on the mongoose variable we will create a **Model**. Mongoose [best-practise](https://samwize.com/2014/03/07/what-mongoose-never-explain-to-you-on-case-sentivity/) is to name your Modal with the **capitalized**, **singular** version of your collection name. Then link it to the collection using the **lower-case**, **singular** verion of your collection name. Make sure to export it:
+Back on our `userModel.js` file, using another property on the mongoose variable we will create a **Model**. Mongoose [best-practise](https://samwize.com/2014/03/07/what-mongoose-never-explain-to-you-on-case-sentivity/) is to name your Modal with the **capitalized**, **singular** version of your collection name. Then link it to the collection using the **lower-case**, **singular** verion of your collection name. Make sure to export it:
 
 ```js
 export const UserModel = mongoose.model("user", userSchema);
@@ -127,7 +127,7 @@ export const getUsers = async (req, res) => {
 }
 ```
 
-- Once you're getting a positive response through Postman, you can try writing the fetch request in React. Typescript is going to want to know the shape of the object we'll be receiving from our fetch. We can create an `interface` for a User, and a `Type` for the array of Users we expect to receive. If we think we're going to be using them in more than just this file (likely), we can save these Types in an `@types` folder, in an `index.d.ts` file. This means they're universally available without needing to export/import:
+Once you're getting a positive response through Postman, you can try writing the fetch request in React. Typescript is going to want to know the shape of the object we'll be receiving from our fetch. We can create an `interface` for a User, and a `Type` for the array of Users we expect to receive. If we think we're going to be using them in more than just this file (likely), we can save these Types in an `@types` folder, in an `index.d.ts` file. This means they're universally available without needing to export/import:
 
 ```ts
 interface User {
@@ -140,11 +140,11 @@ interface User {
 type Users = User[]
 ```
 
-- We will need to create a state to hold the result of our fetch. Since we know it will always be an array, we can initialize it as an empty array, but set the Type to be the `Users` type we created. We will then write a fetch request like usual, and call it in a `useEffect()`. Rather than hardcoding the localhost URL, it's a good idea to create a `.env` file to hold the **base URL** of our server. For development, this is going to be the local host port. Later though, it will change to the domain we deploy it to. If we don't set this environmental variable now, we'll have to manually change all our fetch requests went we deploy. 
+We will need to create a state to hold the result of our fetch. Since we know it will always be an array, we can initialize it as an empty array, but set the Type to be the `Users` type we created. We will then write a fetch request like usual, and call it in a `useEffect()`. Rather than hardcoding the localhost URL, it's a good idea to create a `.env` file to hold the **base URL** of our server. For development, this is going to be the local host port. Later though, it will change to the domain we deploy it to. If we don't set this environmental variable now, we'll have to manually change all our fetch requests went we deploy. 
 
-- But what if we want to make more specific [find](https://mongoosejs.com/docs/api/model.html#Model.find()) requests? Let's make an endpoint with parameters! Since for now our database only holds users, we'll try to find a specific user by their email. Since we've set this property to be unique in our database, we can use Mongoose's `findOne()` method. If we searched by a property that could return multiple results, this method will return the _first_ document matching our filter. Alternatively, you could use `findById()`, or simply `find({ detail: value })` which will return an array of all documents matching the filter. **note** that these matches will be subject to case-sensitivity unless you specify otherwise!
+But what if we want to make more specific [find](https://mongoosejs.com/docs/api/model.html#Model.find()) requests? Let's make an endpoint with parameters! Since for now our database only holds users, we'll try to find a specific user by their email. Since we've set this property to be unique in our database, we can use Mongoose's `findOne()` method. If we searched by a property that could return multiple results, this method will return the _first_ document matching our filter. Alternatively, you could use `findById()`, or simply `find({ detail: value })` which will return an array of all documents matching the filter. **note** that these matches will be subject to case-sensitivity unless you specify otherwise!
 
-- In our `userController.js`, write a function to getUserByEmail. First I'm just going to demonstrate how parameters can be accessed on the **req** object:
+In our `userController.js`, write a function to getUserByEmail. First I'm just going to demonstrate how parameters can be accessed on the **req** object:
 
 ```js
 // routes
@@ -158,7 +158,7 @@ const getUserByEmail = async(req, res) => {
 }
 ```
 
-- We can now use this variable to set a filter in the `findOne()` method:
+We can now use this variable to set a filter in the `findOne()` method:
 
 ```js
 const getUserByEmail = async (req, res) => {
@@ -180,12 +180,12 @@ const getUserByEmail = async (req, res) => {
 }
 ```
 
-- Returning a [status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) will help with error handling from your front-end. Here are some codes you can return in different scenarios:
+Returning a [status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) will help with error handling from your front-end. Here are some codes you can return in different scenarios:
 
 ![status_codes1](status_codes1.png)
 ![status_codes2](status_codes2.png)
 ![status_codes3](status_codes3.png)
 
-- Validating on the server-side _as well_ as validating on the client side is very important. Just in case any mistakes slip through, you want to avoid sending pointless requests any further. There are some simple validation checks you can perform, such as checking that all required fields exist, emails and passwords are correctly formatted. To assist you with this, have a look at [**Express Validator**](https://express-validator.github.io/docs/). Sending back custom error messages is fine, but make sure to keep them consistently formatted. 
+Validating on the server-side _as well_ as validating on the client side is very important. Just in case any mistakes slip through, you want to avoid sending pointless requests any further. There are some simple validation checks you can perform, such as checking that all required fields exist, emails and passwords are correctly formatted. To assist you with this, have a look at [**Express Validator**](https://express-validator.github.io/docs/). Sending back custom error messages is fine, but make sure to keep them consistently formatted. 
 
-- **GET** method API requests are only ever to **read** data. If you want to read ahead about **adding**, **updating** or **deleting** data, have a look at [querying](https://mongoosejs.com/docs/models.html#querying) and [documents](https://mongoosejs.com/docs/documents.html) (Mongoose documentation), [request methods](https://en.wikipedia.org/wiki/HTTP#Request_methods), and [routing](https://expressjs.com/en/guide/routing.html) (Express documentation).
+**GET** method API requests are only ever to **read** data. If you want to read ahead about **adding**, **updating** or **deleting** data, have a look at [querying](https://mongoosejs.com/docs/models.html#querying) and [documents](https://mongoosejs.com/docs/documents.html) (Mongoose documentation), [request methods](https://en.wikipedia.org/wiki/HTTP#Request_methods), and [routing](https://expressjs.com/en/guide/routing.html) (Express documentation).

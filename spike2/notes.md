@@ -2,7 +2,7 @@
 
 ## Express Server Structure
 
-- Let's take the first steps to start building our API! We can follow the **Express** [documentation](https://expressjs.com/en/starter/basic-routing.html) to make our first test request from our index:
+Let's take the first steps to start building our API! We can follow the **Express** [documentation](https://expressjs.com/en/starter/basic-routing.html) to make our first test request from our index:
 
 ```js
 app.get('/', (req, res) => {
@@ -10,11 +10,11 @@ app.get('/', (req, res) => {
 })
 ```
 
-- This is when you're going to start using [Postman](https://www.postman.com/downloads/) a _lot_. If you haven't already, you'll need to download it for this project because the browser version doesn't allow request types other than 'get'. We'll use it now to test our first endpoint! If I change the **path**, then I must send the request to that new end-point to recieve the response. If I change the **method**, my request method must also match.
+This is when you're going to start using [Postman](https://www.postman.com/downloads/) a _lot_. If you haven't already, you should download it for this project - the desktop version runs much better. We'll use it now to test our first endpoint! If I change the **path**, then I must send the request to that new end-point to recieve the response. If I change the **method**, my request method must also match.
 
-- Since this project is going to be quite large, we're going to separate it into different folders. Create a folder now to hold all our **routes**, and a `.js` file inside for 'user', or 'userRoutes'. This is where we're going to define all the end-points that will affect the documents held in our 'users' collection over on MongoDB.
+Since this project is going to be quite large, we're going to separate it into different folders. Create a folder now to hold all our **routes**, and a `.js` file inside for 'user', or 'userRoutes'. This is where we're going to define all the end-points that will affect the documents held in our 'users' collection over on MongoDB.
 
-- In our `userRoutes.js` file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
+In our `userRoutes.js` file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
 
 - Use this Router Instance to set up a test 'get' route. Make sure to also export the router instance: 
 
@@ -30,7 +30,7 @@ userRouter.get("/test", (req, res) => {
 export default userRouter
 ```
 
-- Import the router instance into the index.js, and have the app **use** it. Here we will define the _base_ endpoint for this router. I recommend defining your base endpoints with '/api/', as this is necessary to deploy on Vercel:
+Import the router instance into the index.js, and have the app **use** it. Here we will define the _base_ endpoint for this router. I recommend defining your base endpoints with '/api/', as this is necessary to deploy on Vercel:
 
 ```js
 import userRouter from './routes/users.js'
@@ -38,38 +38,38 @@ import userRouter from './routes/users.js'
 app.use('/api/users', userRouter);
 ```
 
-- Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take note of where you're putting your **/** symbols. In a similar way to React Router, a **catch-all** endpoint can be indicated with an **asterix**:
+Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take note of where you're putting your **/** symbols. In a similar way to React Router, a **catch-all** endpoint can be indicated with an **asterix**:
 
 ```js
 app.use('*', (req, res) => res.status(404).json({ error: "Endpoint not found." }));
 ```
 
-- Since some of the callback functions for our routes will get quite long, a good practise is to collect them all in a **controller** file. I'm going to create a folder **controllers**, and inside I'll create a `.js` file for 'user', or 'userController'. Here I will write and export my express functions, then import them into my routes file. I'll demonstrate this with the test route function, even though it is only very small. **Note** the difference between a **regular export**, and a **default export**. 
+Since some of the callback functions for our routes will get quite long, a good practise is to collect them all in a **controller** file. I'm going to create a folder **controllers**, and inside I'll create a `.js` file for 'user', or 'userController'. Here I will write and export my express functions, then import them into my routes file. I'll demonstrate this with the test route function, even though it is only very small. **Note** the difference between a **regular export**, and a **default export**. 
 
 ## CRUD & Connecting MongoDB
 
-- **CRUD** = **Create**, **Read**, **Update**, and **Delete**. These are the four basic database functions.
+**CRUD** = **Create**, **Read**, **Update**, and **Delete**. These are the four basic database functions.
 
-- It's time to actually connect our project to our MongoDB database. From MongoDB, on the Database Deployments page, click the button to **Connect**, then **Connect your application**. There's a code snippet here that we're going to copy, but these details need to stay private. So let's set up an **.env** file to hold them.
+It's time to actually connect our project to our MongoDB database. From MongoDB, on the Database Deployments page, click the button to **Connect**, then **Connect your application**. There's a code snippet here that we're going to copy, but these details need to stay private. So let's set up an **.env** file to hold them.
 
-- Install the [**dotenv**](https://www.freecodecamp.org/news/how-to-use-node-environment-variables-with-a-dotenv-file-for-node-js-and-npm/) package from npm, then paste this into the index:
+Install the [**dotenv**](https://www.freecodecamp.org/news/how-to-use-node-environment-variables-with-a-dotenv-file-for-node-js-and-npm/) package from npm, then paste this into the index:
 
 ```js
 import * as dotenv from "dotenv";
 dotenv.config();
 ```
 
-- Create a new file at the root of the `server` called `.env`. This will hold all our environment variables. **Make sure to add it to the .gitignore!!**
+Create a new file at the root of the `server` called `.env`. This will hold all our environment variables. **Make sure to add it to the .gitignore!!**
 
-- `.env` files save data in the format: VARIABLE_NAME=value. Strings don't need quotation marks. To access this variable, use **process.env.VARIABLE_NAME**. We're going to save the code snippet from MongoDB as a variable:
+`.env` files save data in the format: VARIABLE_NAME=value. Strings don't need quotation marks. To access this variable, use **process.env.VARIABLE_NAME**. We're going to save the code snippet from MongoDB as a variable:
 
 ```js
 MONGO_URI=mongodb+srv:...
 ```
 
-- If you've forgotten the password, you can reset it in **Database Access** under **Security**. If you reset it, be aware it might take a few minutes before it updates and access is given. We also need to add our database to the options, copy the database name and paste it after the '.net/', but before '?retry'.
+If you've forgotten the password, you can reset it in **Database Access** under **Security**. If you reset it, be aware it might take a few minutes before it updates and access is given. We also need to add our database to the options, copy the database name and paste it after the '.net/', but before '?retry'.
 
-- We're going to be connecting to MongoDB _through_ an **Object Data Modeling (ODM)** library called [**Mongoose**](https://mongoosejs.com/docs/index.html). You'll have to install the mongoose npm package, then we'll set it up in our index using the credentials saved in our `.env` file. We only want our app to start listening when a connection to MongoDB has been established. Since it's an asynchronous process, we'll move **app.listen()** down into the **.then()** block of the mongoose connection.
+We're going to be connecting to MongoDB _through_ an **Object Data Modeling (ODM)** library called [**Mongoose**](https://mongoosejs.com/docs/index.html). You'll have to install the mongoose npm package, then we'll set it up in our index using the credentials saved in our `.env` file. We only want our app to start listening when a connection to MongoDB has been established. Since it's an asynchronous process, we'll move **app.listen()** down into the **.then()** block of the mongoose connection.
 
 ```js
 mongoose
@@ -82,9 +82,9 @@ mongoose
   .catch((err) => console.log(err));
 ```
 
-- One of the reasons we're using Mongoose on top of MongoDB is because it offers us the opportunity to create **Models** of our data, essentially locking the form it can take with a **Schema**. You set the shape of your data object, and Mongoose makes sure any attempts to add or update data conform to the defined shape. Since we'll need a Model for every collection, we'll make another folder in our server for **models**, and a `.js` file for 'user', or 'userModel'.
+One of the reasons we're using Mongoose on top of MongoDB is because it offers us the opportunity to create **Models** of our data, essentially locking the form it can take with a **Schema**. You set the shape of your data object, and Mongoose makes sure any attempts to add or update data conform to the defined shape. Since we'll need a Model for every collection, we'll make another folder in our server for **models**, and a `.js` file for 'user', or 'userModel'.
 
-- On the `userModel.js` file, import mongoose from 'mongoose'. This variable has a property **Schema**, which we can use to create a **new** Schema, and define the shape of our user object:
+On the `userModel.js` file, import mongoose from 'mongoose'. This variable has a property **Schema**, which we can use to create a **new** Schema, and define the shape of our user object:
 
 ```js
 import mongoose from 'mongoose';

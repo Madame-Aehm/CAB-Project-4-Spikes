@@ -1,4 +1,4 @@
-# Spike 20 Notes
+# Spike 2 Notes
 
 ## Express Server Structure
 

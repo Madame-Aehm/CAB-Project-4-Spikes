@@ -34,6 +34,8 @@ Build a database - make sure you select **M0 FREE**. If you have a preferred pro
 
 Enter a username and password to gain access to your database. In the left-hand menu under Network Access (under Security), click on the button to **+ADD IP ADDRESS**, then click to 'allow access from anywhere'. If you now click on **Browse Collections**, this is where your data will be stored. Click on **Add My Own Data** to create a **Database**, and a **Collection**. Later, we're going to be using **Mongoose** which uses specific naming rules to find data, so make sure you give your collections **lower-case, plural** names.
 
+If this becomes an issue for you, there are ways [around it](https://stackoverflow.com/questions/10547118/why-does-mongoose-always-add-an-s-to-the-end-of-my-collection-name)
+
 ## Node.js Server Setup
 
 To start, we want to initalize the project and create a `package.json` file. We do this by opening a terminal, make sure you're in your 'server' folder, and run:

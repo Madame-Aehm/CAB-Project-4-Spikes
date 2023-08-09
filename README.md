@@ -4,9 +4,11 @@
 
 ## Spike 2 - Express Server + Mongoose
 
-## Spike 3 - Populate + POST Requests
+## Spike 3 - POST Requests
 
-## Spike 4 - Image Upload
+## Spike 4 - Populate + Transactions
+
+## Spike 5 - Image Upload
 
 ## Spike 6 - Authentication + Password Encryption
 

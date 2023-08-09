@@ -1,4 +1,4 @@
-# Spike 24 Notes
+# Project 4: Spike 7
 
 ## Authorization with Passport Strategy
 

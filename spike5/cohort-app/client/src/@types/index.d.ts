@@ -1,9 +1,8 @@
 interface User {
   _id: string,
   email: string,
-  username: string,
-  avatar: string,
-  pets: []
+  password?: string,
+  username: string
 }
 
 type Users = User[]

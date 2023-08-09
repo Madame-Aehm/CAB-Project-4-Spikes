@@ -1,189 +1,114 @@
-## Password Encyption
+# Project 5: Spike 5
 
-- We're going to use a library called [**BCrypt**](https://www.npmjs.com/package/bcrypt) to help us encrypt passwords. This means that even though we can see the password property in our database, it will have been scrambled into an unrecognizable code, keeping our users' data safe and private, even from us! The first step is to install the package.
+## Image Upload
 
-- Create a folder called 'lib' (for libraries), or 'utils' (for utilities). This is where we can store all extra 'helper' functions that we write or import. Create a `.js` file for bycrypt. We're going to write two main functions using the bcrypt library - one to **hash** the password into a code, and the other will be to **compare** the hashed password in our database to the unhashed password entered by the user for authentication. 
+We're not going to be saving any actual images on MongoDB. Instead we will be saving them on the cloud-based image and video management service, [**Cloudinary**](https://cloudinary.com/documentation/how_to_integrate_cloudinary), then just saving a URL reference in MongoDB. To make the upload process easier and safer, we'll also use a middleware called [**Multer**](https://www.npmjs.com/package/multer). Install both packages via npm.
 
-- The two steps of encrypting a password are to generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to hash with `bcrypt.hash()`. BCrypt docs show how this can be done in one or two seperate functions. We'll put it together in one function using async/await, make sure to export it so it can be used in your register function. You will have to specify how many **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
+Start by creating a free account on Cloudinary. Under **Media Library**, you can create folders and manually add or delete files. Start by creating a folder for your user images: 'profile_pics' or 'user_avatars', whatever you like. Upload a sample image. 
+
+On your Dashboard, you'll be able to see the **Cloud Name**, your **API Key**, and your **API Secret**. We'll save these variables in our `.env` file. Then create a folder in your server called `config`, to hold configuration files. This is just to save space on our `index.js`. In a `.js` file for `cloudinary`, copy and paste the config code snippet from the 'getting started' page in Cloudinary docs. Make sure to replace each of the variables for your `process.env` variables. Export this as a function, which we will call on the `index.js` together with the middlewares. 
 
 ```js
-import bcrypt from "bcrypt";
+import { v2 as cloudinary } from 'cloudinary';
 
-export const encryptPassword = async(password) => {
-  try {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hashPassword = await bcrypt.hash(password, salt);
-    return hashPassword
-  } catch(error) {
-    console.log("Error: ", error);
-  }
+const cloudinaryConfig = () => {
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
 }
+
+export default cloudinaryConfig
 ```
 
-- We now want to import and call this function on our password _before_ we send it to the database. Make sure to use **await**, since it is an asynchronous function!
+We'll also need to update our user Schema to include a property for our image. The value will be a `String` URL linking to the image that we will already have uploaded to Cloudinary. This is a good opportunity to demonstrate the [default property](https://mongoosejs.com/docs/defaults.html), which I'll set to the URL of the sample image I already uploaded. If this property isn't included on the user object, or the value is set to **undefined**, then the default will be applied. Any other value (including **null** or an empty string) will still be stored in the database - so be sure to pay attention if you choose to follow this logic.
 
-## Password Verification
-
-- We will need to use `bycrypt.compare()` to check whether a plain text and a hashed text are actually the same string. We'll write and export a short function now, so that it's there for us when we want create a user log-in. This function will return **true** or **false**:
+We're going to create a function using [Multer](https://github.com/expressjs/multer#readme) to act as [middleware](https://expressjs.com/en/guide/using-middleware.html) on any routes that will recieve a file to be uploaded. This won't be our only middleware, so create a folder for `middlewares`, and then create a `.js` file called `multer` for all multer functions (you might decide to write more, later). Here, we'll write and export this function:
 
 ```js
-export const verifyPassword = async (password, hashedPassword) => {
-  const verified = bcrypt.compare(password, hashedPassword);
-  return verified;
-};
-```
+import multer from "multer";
+import path from "path";
 
-- Now, we can write an endpoint and controller function to log in. The front-end will need to send an email and a password in the body of the request. In our controller function, we first need to find a user that matches the email - we can use Mongoose's `findOne()` method for this. If no user is found, then we can return an error. If a user _is_ found, we now want to **compare** the password from the user object in the database with the password sent by our front-end. Use the `verifyPassword()` function we created to do this. If the result is `false`, then we send back an error. If it's `true`, then the user identity has been verified and we can send back a positive response. Later, we'll be sending back an authorization token, but for now, this can be just an object that holds the user data:
-
-```js
-const login = async(req, res) => {
-  try {
-    const existingUser = await User.findOne({ email: req.body.email });
-    if (!existingUser) {
-      res.status(404).json({ error: "no user found" })
+export const multerUpload = multer({
+  storage: multer.diskStorage({}),
+  fileFilter: (req, file, cb) => {
+    let extension = path.extname(file.originalname);
+    if (extension !== ".jpg" && extension !== ".jpeg" && extension !== ".png") {
+      cb(new Error("File extension not supported"), false);
+      return;
     }
-    if (existingUser) {
-      const verified = await verifyPassword(req.body.password, existingUser.password);
-      if (!verified) {
-        res.status(406).json({ error: "password doesn't match" })
-      }
-      if (verified) {
-        res.status(200).json({
-          verified: true,
-          user: {
-            _id: existingUser._id,
-            username: existingUser.username,
-            pets: existingUser.pets,
-            avatar: existingUser.avatar
-          }
-        })
-      }
-    }
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({ error: "something went wrong.." })
-  }
-}
-```
-
-- In React, we can create a new component or page for our login interface. Since the functionality will be linked to a user, it's best to create a Context to hold the user state and functions linked to the user state.
-
-## React Context with Typescript
-
-- Writing a [Context with Typescript](https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/context/) can be a little bit tricky. The first thing we'll need to do is create a **type** or **interface** to define the shape of our Context:
-
-```ts
-interface User {
-  _id: string,
-  email: string,
-  username: string,
-  avatar: string,
-  pets: string[]
-}
-
-interface AuthContextType {
-  user: User | null,
-  login(email: string, password: string): void,
-  logout(): void
-}
-```
-
-- We then need to create context. In the past, we've initalized it to be empty, but then Typescript would infer the type to be nothing and we would never be able to use it! Which means we need to strictly type it. Since our Context doesn't exist yet, the first (but not recommended) way is to type it as either null | your Context type. This, however, means that Typescript is always going to perceive the Context as potentially null, and you'll need to do conditional checks every single time you want to use it.
-
-- A shortcut way to assure Typescript that your Context isn't null is to set the initial value to either `null!` or an empty object `as` your context type:
-
-```js
-const CurrentUserContext = createContext<CurrentUserContextType>({} as CurrentUserContextType);
-```
-```js
-const CurrentUserContext = createContext<CurrentUserContextType>(null!);
-```
-
-- The most recommended way is to create an 'initialValue' variable, which conforms to your type. In our case, the Context variables would be 'null', and any functions would simply throw errors to explain they're not yet being implimented. Think of it like a placeholder. By the time the app loads, though, the true Context will have been created:
-
-```ts
-const initialAuth: AuthContextValue = {
-  user: null,
-  login: () => {
-    throw new Error('login not implemented.');
+    cb(null, true);
   },
-  logout: () => {
-    throw new Error('logout not implemented');
-  }
-};
-
-export const AuthContext = createContext<AuthContextType>(initialAuth);
+});
 ```
 
-- The most tedious part of this process will be the need to update both our type and our initialValue variable each time we add, remove, or change something on our Context. If we still have time, let's write the fetch request to our login endpoint. If not, we can do it tomorrow when we start creating our authentication tokens. 
+We import the **multer** function from the Multer package. This will accept an object as an argument, which will hold specific properties. We are going to set the `storage` property - this indicates the temporary storage location for files being selected in HTML. We're specifying to use `multer.diskStorage()`, but we're passing an empty object. This lets the computer set the temporary storage to the default location. We could manually set a `destination` property, but then we would also have to manually write a function to clean that folder when we're finished with it. 
 
-## React Custom Hooks with Typescript
+The `path` import is a [module](https://nodejs.org/api/path.html) directly from Node.js. It allows us to inspect the full pathname of a file, but it also lets us isolate the file extension. We're going to add another property, `fileFilter`, to our multer object, and we're going to specify that we're only allowing files with the extensions `.jpg`, `.jpeg`, or `.png` to be uploaded.
 
-- The same way we wrote a custom hook to fetch for our previous project, it's not a bad practise to do it again here. [Here](https://dev.to/sulistef/how-to-create-a-custom-react-hook-to-fetch-an-api-using-typescript-ioi) is a page with a nicely explained example. We're going to try to do the same thing, but I also want to introduce the concept of [**Generics**](https://www.typescriptlang.org/docs/handbook/2/generics.html). This is where we create a placeholder for a Type that will be passed down through props. 
+The `fileFilter` property accepts a function with 3 arguments: the **request**, the **file**, and another **callback** function. The callback function dictates what should happen after the fileFilter logic has been applied. In our case, if the file extension isn't accepted, it will throw an error, and `false` indicates that the file should _not_ be uploaded. If the file extension is accepted, then it won't send an error, and `true` gives permission for the file to continue to our controller function. 
 
-- In the following example, `<Placeholder>` is an arbitrary name given to the "props" Type being passed down. We use it to strictly type the data variable we will be returning:
+We call this Multer function on our Route _before_ the controller function. This ensures the file has been checked before it ever reaches your controller function. Now, if we log `req.file` to the console, we should see the file from our request! The rest of the text is still held in the `req.body`. When we call the function, however, we have to specify that we're uploading a **single** file, and we have to specify which **field** that file will be held in:
 
-```ts
-interface ReturnData<Placeholder> {
-  isLoading: boolean;
-  data: Placeholder | null;
-  error: null | string;
-}
+```js
+import { multerUploads } from '../middlewares/multer.js';
+
+router.post("/new", multerUploads.single("avatar"), createUser);
 ```
 
-- In the Hook itself, it will recieve the Type like props. We can now use it wherever we need it! It could be used to strictly type the parameters or the return, and can also be reached inside the function to be applied to any relevant variables:
+Now we need to write a function to upload that file to Cloudinary! I'm going to create a folder called `utils` to hold my utility functions. Here, I'll create a `.js` file for `image management`. The first function will be my upload:
 
-```ts
-interface NotOk {
-  error: string
-}
+```js
+import { v2 as cloudinary } from "cloudinary";
 
-export function useGet<Placeholder>(url: string): ReturnData<Placeholder> {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<Placeholder | null>(null);
-  const [error, setError] = useState<null | string>(null);
-
-  const get = async () => {
-    setError(null);
+export const imageUpload = async(file, folder) => {
+  if (file !== undefined) {
     try {
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setData(data);
-      } else {
-        const { error } = await response.json() as NotOk;
-        setData(null);
-        setError(error.error);
-      }
-    } catch (error) {
-      const { message } = error as Error;
-      setError(message);
-      setData(null)
-    } finally {
-      setIsLoading(false);
+      const result = await cloudinary.uploader.upload(file.path, { folder: folder });
+      console.log(result);
+      return result.secure_url;
+    } catch(e) {
+      console.log(e);
+      return undefined
     }
-  };
-
-  useEffect(() => {
-    url && get();
-  }, [url]);
-
-  return { isLoading, data, error };
+  } else {
+    return undefined
+  }
 }
 ```
 
-- When we call the function, we just have to be sure to include the Type we wish to pass:
+The reason I've done check a for `undefined`, is so that if there isn't a file, I don't waste resources trying to upload nothing. I then return `undefined` for anything other than a successful file upload, so my **default** setting will apply if the field was empty, or there was an error. If you decide to make uploading a profile image a compulsory feature, then you can leave off this additional check as your user will _have_ to choose a file (you would have front-end validation to ensure this). You could alternatively choose to abort the user creation function and return an error.
 
-```ts
-// I created a type for each response for the catfacts api
-interface CatFactType {
-  fact: string;
-  length?: number;
+Basically, I've just copied this Cloudinary uploader function directly from the Cloudinary documentation. I'm passing a file and a folder into the function, and cloudinary does the rest to put that file into that folder. I just need to make sure to include both arguments when I call the function. It will return quite a large object with many properties, let's upload a file and log the result to the console to look at it. In Postman, for any POST request that includes files, we need to use **Form Data**.
+
+The most useful of those properties for us will be **secure_url**, which is just a link to the online source of the image. If you want to be able to delete anything from Cloudinary, you will also need to save the **public_id**. Deleting from Cloudinary is optional! I'm going to have my `imageUpload` function return just the secure URL or `undefined` so I can set the return directly as my avatar property on my `newUser` object. Our whole `createUser` function should now look something like this:
+
+```js
+const createUser = async(req, res) => {
+  if (!req.body.email || !req.body.password || !req.body.username) {
+    return res.status(406).json({ error: "Please fill out all fields" })
+  }
+  const uploadedImage = await imageUpload(req.file, "user_avatars");
+  const newUser = new User({ 
+    email: req.body.email,
+    password: req.body.password,
+    username: req.body.username,
+    avatar: uploadedImage
+   });
+  try {
+    const result = await newUser.save();
+    res.status(200).json(result)
+  } catch(e) {
+    console.log(e)
+    e.code === 11000 ? res.status(406).json({ error: "That email is already registered" }) 
+    : res.status(500).json({ error: "Unknown error occured", ...e })
+  }
 }
-interface CatFactsArray {
-  data: CatFactType[];
-}
-const { data, isLoading, error } = useGet<CatFactType>("https://catfact.ninja/fact");
-const { data: factsArray, isLoading: factsLoading, error: factsError } = useGet<CatFactsArray>("https://catfact.ninja/facts");
 ```
+
+Phew. Now that it's all working through Postman, we have to write a fetch to call it from our React front-end! Let's look at the code in Postman's sidebar to guide us - we can see they're appending their body as Form Data. This is necessary so our Multer middleware can check the field we're using to hold our file.
+
+We'll need to add an `<input type='file' />` so our user can select their file for upload. You can [access](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#getting_information_on_selected_files) this file using `event.target.files`, which will be an array of all selected files. Since we're only selecting one, it will always be the item at the zero index.
+
+**Warning:** When using FormData to submit POST requests using _XMLHttpRequest_ or the *Fetch_API* with the _multipart/form-data_ Content-Type (e.g. when uploading Files and Blobs to the server), **do not explicitly set the Content-Type header on the request**. Doing so will prevent the browser from being able to set the Content-Type header with the boundary expression it will use to delimit form fields in the request body. [Read more](https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects).

@@ -1,12 +1,10 @@
-# Spike 1 notes
+# Project 4: Spike 1
 
-## Project 4 Kick Off
+## Project Kick Off
 
 [Kick Off Presentation](https://lms.codeacademyberlin.com/content/web/Module-2/Project-1/Sprint-1)
 
-## MERN Stack
-
-### MongoDB - Express - React - Node
+## MERN stack: MongoDB - Express - React - Node
 
 **Node.js** is an environment that can run JavaScript outside a browser. This means the developer can continue to write in JavaScript, even for back-end programming. [This](https://kinsta.com/knowledgebase/what-is-node-js/) page gives a good summary.
 
@@ -97,7 +95,7 @@ Another non-essential (but _very_ convenient) package you can install is [**conc
 
 ```js
 "scripts": {
-  "start": "concurrently \"nodemon index.js\" \"cd ../client && npm start\""
+  "start": "concurrently \"nodemon index.js\" \"cd ../client && npm run dev\""
 }
 ```
 

@@ -8,6 +8,7 @@ interface FoundUser {
 }
 
 const Homepage = (props: Props) => {
+  const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<Users>([]);
   const [inputValue, setInputValue] = useState("");
   const [foundUser, setFoundUser] = useState<FoundUser | null>(null);
@@ -28,24 +29,29 @@ const Homepage = (props: Props) => {
   // }
 
   const handleSubmit = async() => {
+    setLoading(true);
     try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/email/${inputValue}`);
       const result = await response.json();
       console.log(result);
       setFoundUser(result);
+      setLoading(false);
     } catch (error) {
       console.log(error)
       setFoundUser(null);
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     fetchAllUsers();
+    setLoading(false);
   }, [])
 
   const userCardStyle = { border: "solid 1px black", padding: "0.5em", marginBottom: "1em", width: "50%" }
   return (
     <div>
+      { loading && <p>Loading...</p> }
       <h1>MERN App</h1>
       <h3>These are all the users in my Database:</h3>
       { users.map((user) => {

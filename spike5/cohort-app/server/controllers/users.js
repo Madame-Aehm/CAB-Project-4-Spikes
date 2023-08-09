@@ -1,5 +1,5 @@
 import { User } from "../models/users.js";
-import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
+import { encryptPassword } from "../utils/bcrypt.js";
 import { imageUpload } from "../utils/imageManagement.js";
 
 const test = (req, res) => {
@@ -50,10 +50,8 @@ const getUserById = async(req, res) => {
 const registerUser = async(req, res) => {
   if (!req.body.email|| !req.body.password || !req.body.username) return res.status(406).json({ error: "Please fill out all fields" });
   const uploadedImage = await imageUpload(req.file, "user_avatars");
-  const encryptedPassword = await encryptPassword(req.body.password);
   const newUser = new User({
     ...req.body,
-    password: encryptedPassword,
     avatar: uploadedImage
   });
   try {
@@ -66,6 +64,26 @@ const registerUser = async(req, res) => {
   }
 }
 
+// const createUser = async(req, res) => {
+//   if (!req.body.email || !req.body.password || !req.body.username) return res.status(406).json({ error: "Please fill out all fields" })
+//   const encryptedPassword = await encryptPassword(req.body.password);
+//   const uploadedImage = await imageUpload(req.file, "user_avatars");
+//   const newUser = new User({ 
+//     email: req.body.email,
+//     password: encryptedPassword,
+//     username: req.body.username,
+//     avatar: uploadedImage
+//    });
+//   try {
+//     const result = await newUser.save();
+//     res.status(200).json(result)
+//   } catch(e) {
+//     console.log(e)
+//     e.code === 11000 ? res.status(406).json({ error: "That email is already registered" }) 
+//     : res.status(500).json({ error: "Unknown error occured", ...e })
+//   }
+// }
+
 const updateUser = async(req, res) => {
   const { id } = req.params;
   try {
@@ -77,30 +95,4 @@ const updateUser = async(req, res) => {
   }
 }
 
-const logIn = async(req, res) => {
-  try {
-    const existingUser = await User.findOne({ email: req.body.email });
-    if (existingUser) {
-      const verified = await verifyPassword(req.body.password, existingUser.password);
-      if (verified) {
-        res.status(200).json({ 
-          verified: true,
-          user: {
-            email: existingUser.email,
-            avatar: existingUser.avatar,
-            username: existingUser.username
-          }
-        })
-      } else {
-        res.status(401).json({ error: "Password doesn't match" })
-      }
-    } else {
-      res.status(404).json({ error: "User not found" })
-    }
-  } catch(e) {
-    console.log(e);
-    res.status(500).send(e.message);
-  }
-}
-
-export { getUserById, updateUser, test, getAllUsers, getUserByEmail, registerUser, logIn }
+export { getUserById, updateUser, test, getAllUsers, getUserByEmail, registerUser }

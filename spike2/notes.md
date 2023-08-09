@@ -1,6 +1,6 @@
-# Spike 2 Notes
+# Project 4: Spike 2
 
-## Express Server Structure
+## Express Server
 
 Let's take the first steps to start building our API! We can follow the **Express** [documentation](https://expressjs.com/en/starter/basic-routing.html) to make our first test request from our index:
 

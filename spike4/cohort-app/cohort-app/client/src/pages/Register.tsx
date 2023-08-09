@@ -5,6 +5,7 @@ type Props = {}
 type Avatar = File | string
 
 function Register({}: Props) {
+  const [loading, setLoading] = useState(false);
   const [formInputs, setFormInputs] = useState({
     email: "",
     password: "",
@@ -21,6 +22,7 @@ function Register({}: Props) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     // console.log(formInputs);
     const myHeaders = new Headers();
     const formdata = new FormData();
@@ -39,9 +41,11 @@ function Register({}: Props) {
       const result = await response.json();
       console.log("result", result);
       response.ok ? alert("successfully registered!") : alert(result.error)
+      setLoading(false);
     } catch (e) {
       alert("Catch error - check console.")
       console.log(e)
+      setLoading(false);
     }
   }
 
@@ -49,6 +53,7 @@ function Register({}: Props) {
 
   return (
     <div>
+      { loading && <p>Loading...</p> }
       <h1>Register</h1>
       <form style={formStyle} onSubmit={handleSubmit}>
         <input name='email' type='email' placeholder='Enter your email address' onChange={handleChange} />

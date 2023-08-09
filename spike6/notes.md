@@ -1,4 +1,75 @@
-# Spike 23 Notes
+# Project 4: Spike 6
+
+## Password Encyption
+
+We're going to use a library called [**BCrypt**](https://www.npmjs.com/package/bcrypt) to help us encrypt passwords. This means that even though we can see the password property in our database, it will have been scrambled into an unrecognizable code, keeping our users' data safe and private, even from us! The first step is to install the package via npm.
+
+Create a `.js` file for `bycrypt` in the folder for `utils`. We're going to write two main functions using the bcrypt library - one to **hash** the password into a code, and the other will be to **compare** the hashed password in our database to the unhashed password entered by the user for authentication. 
+
+The two steps to encrypt a password are to **1.** generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to hash with `bcrypt.hash()`. BCrypt docs show how this can be done in one or two seperate functions. We'll put it together in one function using async/await - make sure to export it so it can be used in your register function. You will then need to **2.** specify **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
+
+```js
+import bcrypt from "bcrypt";
+
+export const encryptPassword = async(password) => {
+  try {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword
+  } catch(error) {
+    console.log("Error: ", error);
+  }
+}
+```
+
+We now want to import and call this function on our password _before_ we send it to the database. Make sure to use **await**, since it is an asynchronous function!
+
+## Password Verification
+
+We will need to use `bycrypt.compare()` to check whether a plain text and a hashed text are actually the same string. We'll write and export a short function now, so that it's there for us when we want create a user log-in. This function will return a `boolean`:
+
+```js
+export const verifyPassword = async (password, hashedPassword) => {
+  const verified = bcrypt.compare(password, hashedPassword);
+  return verified;
+};
+```
+
+Now, we can write an endpoint and controller function to log in. The front-end will need to send an email and a password in the body of the request. In our controller function, we first need to find a user that matches the email - we can use Mongoose's `findOne()` method for this. If no user is found, then we can return an error. If a user _is_ found, we now want to **compare** the password from the user object in the database with the password sent by our front-end. Use the `verifyPassword()` function we created to do this. If the result is `false`, then we send back an error. If it's `true`, then the user identity has been verified and we can send back a positive response. Later, we'll be sending back an authorization token, but for now, this can be just an object that holds the user data:
+
+```js
+const login = async(req, res) => {
+  try {
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (!existingUser) {
+      res.status(404).json({ error: "no user found" })
+    }
+    if (existingUser) {
+      const verified = await verifyPassword(req.body.password, existingUser.password);
+      if (!verified) {
+        res.status(406).json({ error: "password doesn't match" })
+      }
+      if (verified) {
+        res.status(200).json({
+          verified: true,
+          user: {
+            _id: existingUser._id,
+            username: existingUser.username,
+            pets: existingUser.pets,
+            avatar: existingUser.avatar
+          }
+        })
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "something went wrong.." })
+  }
+}
+```
+
+- In React, we can create a new component or page for our login interface. Since the functionality will be linked to a user, it's best to create a Context to hold the user state and functions linked to the user state.
 
 ## Authentication
 

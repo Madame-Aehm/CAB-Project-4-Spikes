@@ -12,6 +12,7 @@ const NavBar = (props: Props) => {
   return (
     <nav>
     <Link to='/' style={spacing}>Home</Link>
+    <Link to='/pets' style={spacing}>Pets</Link>
     { user ? <button onClick={logout}>Log out</button> : (
       <>
         <Link to='/register' style={spacing}>Register</Link>

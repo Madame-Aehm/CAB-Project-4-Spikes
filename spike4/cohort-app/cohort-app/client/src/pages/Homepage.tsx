@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 
 type Props = {}
 
@@ -43,12 +43,30 @@ const Homepage = (props: Props) => {
     }
   }
 
+  const handleChangeUsername = (e: FormEvent<HTMLFormElement>, user: User) => {
+    e.preventDefault();
+    const input = document.getElementById('changeUsername') as HTMLInputElement;
+    const headers = new Headers();
+    headers.append("Content-Type", "application/x-www-form-urlencoded");
+    const body = new URLSearchParams();
+    body.append("username", input!.value);
+    var optns = {
+      method: 'POST',
+      headers,
+      body,
+    };
+    fetch(`http://localhost:5000/api/users/update-both/${user._id}`, optns)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+
   useEffect(() => {
     fetchAllUsers();
     setLoading(false);
   }, [])
 
-  const userCardStyle = { border: "solid 1px black", padding: "0.5em", marginBottom: "1em", width: "50%" }
+  const userCardStyle = { border: "solid 1px black", padding: "0.5em", width: "50%", display: "flex", justifyContent: "space-between" }
   return (
     <div>
       { loading && <p>Loading...</p> }
@@ -56,10 +74,18 @@ const Homepage = (props: Props) => {
       <h3>These are all the users in my Database:</h3>
       { users.map((user) => {
         return (
-          <div key={user._id} style={userCardStyle}>
-            <h3>{user.username}</h3>
-            <p>{user.email}</p>
-          </div>
+          <React.Fragment key={user._id}>
+            <div style={userCardStyle}>
+              <div>
+                <h3>{user.username}</h3>
+                <p>{user.email}</p>
+              </div>
+              <img src={user.avatar} alt={`${user.username}'s avatar`} style={{ height: "50px", width: "50px", borderRadius: "50%" }}/>
+            </div>
+            <form style={{ marginBottom: "1em" }} onSubmit={(e) => handleChangeUsername(e, user)}>
+              <input placeholder='Enter new username' id='changeUsername'/>
+            </form>
+          </React.Fragment>
         )
       }) }
 

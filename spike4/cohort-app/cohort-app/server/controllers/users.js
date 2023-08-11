@@ -1,3 +1,6 @@
+// import conn from "../config/conn.js";
+import conn from "../index.js";
+import { Pet } from "../models/pets.js";
 import { User } from "../models/users.js";
 import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
 import { imageUpload } from "../utils/imageManagement.js";
@@ -17,7 +20,6 @@ const getAllUsers = async (req, res) => {
 }
 
 const getUserByEmail = async (req, res) => {
-  // console.log(req.params);
   try {
     const user = await User.findOne({ email: req.params.email });
     if (user) {
@@ -77,6 +79,33 @@ const updateUser = async(req, res) => {
   }
 }
 
+const updateUserAndPet = async(req, res) => {
+  const session = await conn.startSession();
+  session.startTransaction();
+  try {
+    const userToUpdate = await User.findById(req.params.userID);
+    if (userToUpdate) {
+      const userPets = await Pet.find({ 'owner_info._id': req.params.userID });
+      for (const x in req.body) {
+        userToUpdate[x] = req.body[x];
+        await userToUpdate.save({ session });
+        for (let i = 0; i < userPets.length; i++) {
+          userPets[i].owner_info[x] = req.body[x];
+          await userPets[i].save({ session });
+        }
+      }
+      await session.commitTransaction();
+    }
+    res.status(200).json("Did the thing..")
+  } catch (e){
+    console.log(e);
+    await session.abortTransaction();
+    res.status(500).json({ error: "Something went wrong..." })
+  } finally {
+    session.endSession();
+  }
+}
+
 const logIn = async(req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
@@ -103,4 +132,4 @@ const logIn = async(req, res) => {
   }
 }
 
-export { getUserById, updateUser, test, getAllUsers, getUserByEmail, registerUser, logIn }
+export { getUserById, updateUser, updateUserAndPet, test, getAllUsers, getUserByEmail, registerUser, logIn }

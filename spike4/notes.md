@@ -56,4 +56,6 @@ It's worth making some visual aids for yourself at this point, so you can keep t
 ![mern_diagram](mern_diagram.jpg)
 
 
-## Transactions?
+## Transactions
+
+**Transactions** should be used when the set of database operations you are making needs to be **atomic**, ie. they _all_ need to succeed, or all changes should be reverted.. The transaction ensures that the database is always in a consistent state.

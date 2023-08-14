@@ -12,7 +12,7 @@ router.get("/id/:id", getUserById);
 router.post("/register", multerUploads.single("avatar"), registerUser);
 router.post("/login", logIn);
 router.post("/update/:id", updateUser);
-router.post("/update-both/:userID", updateUserAndPet);
+router.post("/update-both/:userID", multerUploads.single("avatar"), updateUserAndPet);
 
 
 export default router

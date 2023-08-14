@@ -83,19 +83,17 @@ const updateUserAndPet = async(req, res) => {
   const session = await conn.startSession();
   session.startTransaction();
   try {
-    const userToUpdate = await User.findById(req.params.userID);
-    if (userToUpdate) {
-      const userPets = await Pet.find({ 'owner_info._id': req.params.userID });
-      for (const x in req.body) {
-        userToUpdate[x] = req.body[x];
-        await userToUpdate.save({ session });
-        for (let i = 0; i < userPets.length; i++) {
-          userPets[i].owner_info[x] = req.body[x];
-          await userPets[i].save({ session });
-        }
-      }
-      await session.commitTransaction();
+    const newAvatar = await imageUpload(req.file, "user_avatars");
+    const userToUpdate = await User.findByIdAndUpdate(req.params.userID, { ...req.body, avatar: newAvatar }, { new: true });
+    if (!userToUpdate) return res.status(404).json({ error: "No user found" });
+    const usersPets = await Pet.find({ "owner_info._id": req.params.userID })
+    // if (newAvatar) {
+    for (let i = 0; i < usersPets.length; i++) {
+      if (newAvatar) usersPets[i].owner_info = { ...usersPets[i].owner_info, ...req.body, avatar: newAvatar };
+      else usersPets[i].owner_info = { ...usersPets[i].owner_info, ...req.body };
+      await usersPets[i].save({ session });
     }
+    await session.commitTransaction();
     res.status(200).json("Did the thing..")
   } catch (e){
     console.log(e);

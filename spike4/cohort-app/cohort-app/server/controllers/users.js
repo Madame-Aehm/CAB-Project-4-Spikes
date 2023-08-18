@@ -87,7 +87,6 @@ const updateUserAndPet = async(req, res) => {
     const userToUpdate = await User.findByIdAndUpdate(req.params.userID, { ...req.body, avatar: newAvatar }, { new: true });
     if (!userToUpdate) return res.status(404).json({ error: "No user found" });
     const usersPets = await Pet.find({ "owner_info._id": req.params.userID })
-    // if (newAvatar) {
     for (let i = 0; i < usersPets.length; i++) {
       if (newAvatar) usersPets[i].owner_info = { ...usersPets[i].owner_info, ...req.body, avatar: newAvatar };
       else usersPets[i].owner_info = { ...usersPets[i].owner_info, ...req.body };

@@ -14,6 +14,8 @@
 
 ## Spike 7 - Authorization
 
+## Spike 8 - Deployment + PWA configuration
+
 # Presentation
 - Live Demo (max 5 minutes)
 - Code Review

@@ -48,7 +48,9 @@ Now let's look at the front-end. Go back to the main overview, and click **Add N
 
 We're going to have to add our `.env` file again, but here's where we'll need to edit variable defining the base URL of our back-end. It will no longer be `http://localhost:5000/`, but instead the root URL of your newly deployed server project! 
 
-**Deploy**!! And hopefully, your app is now fully online! Since we have it linked to the remote GitHub repository, any changes pushed to the branch you've deployed will trigger a rebuild of the vercel deployment, and you new changes should be live within a few minutes. 
+**Deploy**!! And hopefully, your app is now fully online! Since we have it linked to the remote GitHub repository, any changes pushed to the branch you've deployed will trigger a rebuild of the vercel deployment, and you new changes should be live within a few minutes.
+
+## PWA configuration
 
 Now that it's deployed, we can look at making the app installable as a **Progressive Web App (PWA)**. A PWA provides a user with an app-like experience, even though the app is really just a website running in a web browser. We do this by adding a `manifest.json` which gives the browser [instructions](https://web.dev/add-manifest/) on how the app should behave when installed on the device. 
 

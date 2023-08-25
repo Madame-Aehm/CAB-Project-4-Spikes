@@ -1,3 +1,5 @@
+# Project 4: Spike 8
+
 ## Deploy to Vercel
 
 We've chosen Vercel as our preferred deployment platform as it's one of the last places online where you can deploy a backend project for free. It's up to you if you want to deploy both parts on the same platform, or you could use a different service like Netlify for your front-end. 
@@ -36,9 +38,9 @@ To use Vercel, you'll need an account. Once that's done, from your overview, cli
 
 We'll import from a GitHub repository, so make sure your remote repo has the latest version of your project. Select your project.
 
-We'll actually be deploying **two** projects - your client and your server will be deployed seperately. So under **Configure Project**, our first step will be to change the **Root Directory**. Let's deploy the **server** first. 
+We'll actually be deploying **two** projects - your client and your server will be deployed separately. So under **Configure Project**, our first step will be to change the **Root Directory**. Let's deploy the **server** first. 
 
-Underneath there will be a dropdown for us to enter our **Environmental Variables**. Copy and paste your entire `.env` file into these inputs (you can actually paste the entire file, and Vercel will seperate the keys from the values).
+Underneath there will be a dropdown for us to enter our **Environmental Variables**. Copy and paste your entire `.env` file into these inputs (you can actually paste the entire file, and Vercel will separate the keys from the values).
 
 **Deploy**!! The build can sometimes take a few minutes. 
 
@@ -109,7 +111,7 @@ export default defineConfig({
 })
 ```
 
-A manifest **must** include at least a `name` and `short_name`, which be the titles shown under the icon on the homescreen, and in the longer title shown at the top of the app window. It will also need an icons for at least `512px` and `192px`. Icons should be saved in the `public` folder of your app. You can use a service like [this](https://maskable.app/editor)
+A manifest **must** include at least a `name` and `short_name`, which be the titles shown under the icon on the home screen, and in the longer title shown at the top of the app window. It will also need an icons for at least `512px` and `192px`. Icons should be saved in the `public` folder of your app. You can use a service like [this](https://maskable.app/editor)
 
 Feel free to look through all the additional [properties](https://web.dev/add-manifest/#manifest-properties) and customize them for your app! 
 

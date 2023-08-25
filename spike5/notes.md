@@ -24,7 +24,7 @@ export default cloudinaryConfig
 
 We'll also need to update our user Schema to include a property for our image. The value will be a `String` URL linking to the image that we will already have uploaded to Cloudinary. This is a good opportunity to demonstrate the [default property](https://mongoosejs.com/docs/defaults.html), which I'll set to the URL of the sample image I already uploaded. If this property isn't included on the user object, or the value is set to **undefined**, then the default will be applied. Any other value (including **null** or an empty string) will still be stored in the database - so be sure to pay attention if you choose to follow this logic.
 
-We're going to create a function using [Multer](https://github.com/expressjs/multer#readme) to act as [middleware](https://expressjs.com/en/guide/using-middleware.html) on any routes that will recieve a file to be uploaded. This won't be our only middleware, so create a folder for `middlewares`, and then create a `.js` file called `multer` for all multer functions (you might decide to write more, later). Here, we'll write and export this function:
+We're going to create a function using [Multer](https://github.com/expressjs/multer#readme) to act as [middleware](https://expressjs.com/en/guide/using-middleware.html) on any routes that will receive a file to be uploaded. This won't be our only middleware, so create a folder for `middlewares`, and then create a `.js` file called `multer` for all multer functions (you might decide to write more, later). Here, we'll write and export this function:
 
 ```js
 import multer from "multer";

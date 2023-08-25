@@ -44,7 +44,7 @@ const registerUser = async(req, res) => {
   } catch(e) {
     console.log(e);
     e.code === 11000 ? res.status(406).json({ error: "That email is already registered" }) 
-    : res.status(500).json({ error: "Unknown error occured" });
+    : res.status(500).json({ error: "Unknown error occurred" });
   }
 }
 ```
@@ -68,7 +68,7 @@ response.ok ? alert("successfully registered!") : alert(result.error)
 
 Put some signal after the fetch to communicate to your user if the registration was successful, then test it. We can then check our database to see if our new user is there. 
 
-The same logic can be applied to update a user. I could set a route that recieves an ID as params, then write a function that uses Mongoose's `findByIdAndUpdate()`:
+The same logic can be applied to update a user. I could set a route that receives an ID as params, then write a function that uses Mongoose's `findByIdAndUpdate()`:
 
 ```js
 const updateUser = async(req, res) => {

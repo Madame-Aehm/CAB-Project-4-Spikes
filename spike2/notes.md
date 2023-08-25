@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
 })
 ```
 
-This is when you're going to start using [Postman](https://www.postman.com/downloads/) a _lot_. If you haven't already, you should download it for this project - the desktop version runs much better. We'll use it now to test our first endpoint! If I change the **path**, then I must send the request to that new end-point to recieve the response. If I change the **method**, my request method must also match.
+This is when you're going to start using [Postman](https://www.postman.com/downloads/) a _lot_. If you haven't already, you should download it for this project - the desktop version runs much better. We'll use it now to test our first endpoint! If I change the **path**, then I must send the request to that new end-point to receive the response. If I change the **method**, my request method must also match.
 
 Since this project is going to be quite large, we're going to separate it into different folders. Create a folder now to hold all our **routes**, and a `.js` file inside for 'user', or 'userRoutes'. This is where we're going to define all the end-points that will affect the documents held in our 'users' collection over on MongoDB.
 
@@ -38,7 +38,7 @@ import userRouter from './routes/users.js'
 app.use('/api/users', userRouter);
 ```
 
-Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take note of where you're putting your **/** symbols. In a similar way to React Router, a **catch-all** endpoint can be indicated with an **asterix**:
+Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take note of where you're putting your **/** symbols. In a similar way to React Router, a **catch-all** endpoint can be indicated with an **asterisk**:
 
 ```js
 app.use('*', (req, res) => res.status(404).json({ error: "Endpoint not found." }));
@@ -69,7 +69,7 @@ MONGO_URI=mongodb+srv:...
 
 If you've forgotten the password, you can reset it in **Database Access** under **Security**. If you reset it, be aware it might take a few minutes before it updates and access is given. We also need to add our database to the options, copy the database name and paste it after the '.net/', but before '?retry'.
 
-We're going to be connecting to MongoDB _through_ an **Object Data Modeling (ODM)** library called [**Mongoose**](https://mongoosejs.com/docs/index.html). You'll have to install the mongoose npm package, then we'll set it up in our index using the credentials saved in our `.env` file. We only want our app to start listening when a connection to MongoDB has been established. Since it's an asynchronous process, we'll move **app.listen()** down into the **.then()** block of the mongoose connection.
+We're going to be connecting to MongoDB _through_ an **Object Data Modelling (ODM)** library called [**Mongoose**](https://mongoosejs.com/docs/index.html). You'll have to install the mongoose npm package, then we'll set it up in our index using the credentials saved in our `.env` file. We only want our app to start listening when a connection to MongoDB has been established. Since it's an asynchronous process, we'll move **app.listen()** down into the **.then()** block of the mongoose connection.
 
 ```js
 mongoose

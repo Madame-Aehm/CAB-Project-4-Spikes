@@ -1,12 +1,12 @@
 # Project 4: Spike 6
 
-## Password Encyption
+## Password Encryption
 
 We're going to use a library called [**BCrypt**](https://www.npmjs.com/package/bcrypt) to help us encrypt passwords. This means that even though we can see the password property in our database, it will have been scrambled into an unrecognizable code, keeping our users' data safe and private, even from us! The first step is to install the package via npm.
 
-Create a `.js` file for `bycrypt` in the folder for `utils`. We're going to write two main functions using the bcrypt library - one to **hash** the password into a code, and the other will be to **compare** the hashed password in our database to the unhashed password entered by the user for authentication. 
+Create a `.js` file for `bcrypt` in the folder for `utils`. We're going to write two main functions using the bcrypt library - one to **hash** the password into a code, and the other will be to **compare** the hashed password in our database to the un-hashed password entered by the user for authentication. 
 
-The two steps to encrypt a password are to **1.** generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to hash with `bcrypt.hash()`. BCrypt docs show how this can be done in one or two seperate functions. We'll put it together in one function using async/await - make sure to export it so it can be used in your register function. You will then need to **2.** specify **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
+The two steps to encrypt a password are to **1.** generate [**salt**](https://itecnote.com/tecnote/what-are-salt-rounds-and-how-are-salts-stored-in-bcrypt/) with `bcrypt.genSalt()`, which is then used to hash with `bcrypt.hash()`. BCrypt docs show how this can be done in one or two separate functions. We'll put it together in one function using async/await - make sure to export it so it can be used in your register function. You will then need to **2.** specify **salt rounds** - the more rounds, the higher the **cost factor**, and so the longer it will take to scramble and unscramble the data. The recommended default is 10:
 
 ```js
 import bcrypt from "bcrypt";
@@ -27,7 +27,7 @@ We now want to import and call this function on our password _before_ we send it
 
 ## Password Verification
 
-We will need to use `bycrypt.compare()` to check whether a plain text and a hashed text are actually the same string. We'll write and export a short function now, so that it's there for us when we want create a user log-in. This function will return a `boolean`:
+We will need to use `bcrypt.compare()` to check whether a plain text and a hashed text are actually the same string. We'll write and export a short function now, so that it's there for us when we want create a user log-in. This function will return a `boolean`:
 
 ```js
 export const verifyPassword = async (password, hashedPassword) => {

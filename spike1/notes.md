@@ -14,9 +14,9 @@
 
 ## Project Structure
 
-We're still going to use React for our front-end. In a folder that will hold your _whole_ project, create a react app and call it 'client', or 'front-end'. In the same root project folder, create another folder called 'server', or 'back-end'. These will eventually need to be deployed seperately, but we want them all together for development. 
+We're still going to use React for our front-end. In a folder that will hold your _whole_ project, create a react app and call it 'client', or 'front-end'. In the same root project folder, create another folder called 'server', or 'back-end'. These will eventually need to be deployed separately, but we want them all together for development. 
 
-The create-react-app package automatically initalizes a local git repository for you. Our first step will be to delete it! This is because we actually want one git repository for our _whole_ project. **cd** into your `client` and run the following to remove the `.git` file from your React folder. In Windows, you can also manually delete the hidden `.git` file in Windows Explorer.
+The create-react-app package automatically initializes a local git repository for you. Our first step will be to delete it! This is because we actually want one git repository for our _whole_ project. **cd** into your `client` and run the following to remove the `.git` file from your React folder. In Windows, you can also manually delete the hidden `.git` file in Windows Explorer.
 
 ```
 rm -rf .git
@@ -36,7 +36,7 @@ If this becomes an issue for you, there are ways [around it](https://stackoverfl
 
 ## Node.js Server Setup
 
-To start, we want to initalize the project and create a `package.json` file. We do this by opening a terminal, make sure you're in your 'server' folder, and run:
+To start, we want to initialize the project and create a `package.json` file. We do this by opening a terminal, make sure you're in your 'server' folder, and run:
 
 ```
 npm init
@@ -46,7 +46,7 @@ You'll then be prompted to establish some information about your project. If you
 
 Next we're going to install [**Express**](https://expressjs.com/en/starter/installing.html), after which you'll notice you now have a `node_modules` folder, a `package-lock.json`, and your `package.json` will have 'express' listed under 'dependencies'.
 
-Not essental, but very useful is [**Nodemon**](https://www.npmjs.com/package/nodemon). Nodemon will automatically restart your server after you save. Without this package, every time you make a change to your server, you'll need to exit and manually restart it for those changes to apply.
+Not essential, but very useful is [**Nodemon**](https://www.npmjs.com/package/nodemon). Nodemon will automatically restart your server after you save. Without this package, every time you make a change to your server, you'll need to exit and manually restart it for those changes to apply.
 
 Also not essential, but it will make things look more familiar - on your `package.json`, add to the main object:
 

@@ -73,6 +73,8 @@ import jwtAuth from '../middlewares/jwt.js';
 router.get("/me", jwtAuth, getProfile);
 ```
 
+This Unauthorized status will be caught by the catch block when you attempt a fetch on the front-end. If the token is expired, invalid, or absent, you'll need to direct your user to re-authenticate. You should also remove the token from local storage.
+
 Now let's see what happens when I _do_ set the header. First, we'll need a valid token, so I'll use Postman to log in and copy the token in the response. Then, in a `get` request sent to "http://localhost:5000/api/users/me", I will set the **Authorization** type as `Bearer Token` (this is what we defined when we set `jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()` in the options on our Passport strategy) and paste in my token. 
 
 If all goes according to plan, I will be granted access to the endpoint! Passport will also have added an additional property onto my `req` object: try console logging `req.user`. This will be the user returned by the `findById()` function called in the Passport strategy configuration. For this particular endpoint, since all we actually want to send back is the user object itself, this is all we need to return. Remember to construct a new object that doesn't include the password!

@@ -1,0 +1,57 @@
+# Project 4: Spike 7 (option 2)
+
+## Authorization with Express Cookie Parser
+
+An alternative to using Passport for authorizing requests, is **Express Cookie Parser**. Storing our token in Local Storage means we have to rely on our front-end to attach, remove, and send the token. Cookies can be accessed by the server, which means we can attach and remove the Cookies from our server-side controller functions. 
+
+Start by installing the `cookie-parser` package. Then `import`, and have the app use the package from the `index.js`. This will add `.cookies` as a property on the request object. We should put this in with our middlewares, make sure it comes **before** `app.use(cors())`:
+
+```js
+import cookieParser from "cookie-parser"
+app.use(cookieParser());
+```
+
+Our `login` function generates a token and sends it back to the front-end. Let's update that function: instead of sending the token back as JSON in the response, we can use `.cookie()`, together with a credentials header, to tell the front-end to add our Cookie to the browser.
+
+```js
+res.status(200)
+  .header('Access-Control-Allow-Credentials', true)
+  .cookie("token", token, { withCredentials: true, httpOnly: false, })
+  .json({ verified, user });
+```
+
+We can now write a middleware function that will be attached to any endpoint we wish to make authorized. The function will need to extract the token from `req.cookies`, verify the token, and find a user with the `_id` property we saved in our token's payload. If any of these steps fail, then we erase the token by clearing the Cookie and return as error in the response. If all goes well, we initialize a `user` property on the request object as the user from MongoDB, and use the Express `next()` function to move to the controller function. 
+
+```js
+import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
+import { UserModel } from "../models/user.js";
+dotenv.config();
+
+const cookieAuth = async (req, res, next) => {
+  console.log(req.cookies)
+  const { token } = req.cookies;
+  if (!token) return res.status(401).json({ error: "Access denied: No token provided." });
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await UserModel.findById(payload.sub).select("-password");
+    req.user = user;
+    next();
+  } catch (e) {
+    console.log("error", e);
+    return res.clearCookie("token").status(500).send({ error: e.message });
+  }
+};
+
+export default cookieAuth
+```
+
+Call this function as middleware on endpoints that need to be authorized. When sending a fetch request to an authorized endpoint, we will need to add `credentials: "include"` to the fetch options, which attaches the Cookies to the request:
+
+```js
+const requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  credentials: "include" as RequestCredentials
+};
+```

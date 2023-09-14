@@ -58,7 +58,7 @@ Now that it's deployed, we can look at making the app installable as a **Progres
 
 There are still many limitations to this functionality, since browsers and operating systems are never in full agreement. Making your app installable across all browsers and devices will involve lots of options, so today I will only demonstrate how to configure a `manifest.json` that will install an app on an Android device running Chrome. This is mostly because this is my own set up and so testing is easy! Feel free to adapt the code to your own needs, and if you get it working across other operating systems and browsers, please share your process! 🙏
 
-Since we used **Vite** to build our app, I've followed the documentation provided by Vite to make their apps installable, and they happen to have a handy package to make it simpler for us! Install with `-d`, since we want this package to run in development.
+Since we used **Vite** to build our app, I've followed the [documentation](https://vite-pwa-org.netlify.app/) provided by Vite to make their apps installable, and they happen to have a handy package to make it simpler for us! Install with `-d`, since we want this package to run in development.
 
 ```
 npm install -d vite-plugin-pwa

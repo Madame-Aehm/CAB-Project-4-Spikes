@@ -28,6 +28,8 @@ res.status(200)
   .json({ verified, user });
 ```
 
+If we test this function in Postman, underneath the blue **Send** button, you'll see a button for **Cookies**. You'll be able to see your Cookie here.
+
 We can now write a middleware function that will be attached to any endpoint we wish to make authorized. The function will need to extract the token from `req.cookies`, verify the token, and find a user with the `_id` property we saved in our token's payload. If any of these steps fail, then we erase the token by clearing the Cookie and return as error in the response. If all goes well, we initialize a `user` property on the request object as the user from MongoDB, and use the Express `next()` function to move to the controller function. 
 
 ```js

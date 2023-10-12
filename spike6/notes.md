@@ -103,8 +103,7 @@ JWT_SECRET=this-is-my-secret-key
 
 ```js
 import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
-dotenv.config();
+import 'dotenv/config'
 
 export const generateToken = (user) => {
   const payload = {

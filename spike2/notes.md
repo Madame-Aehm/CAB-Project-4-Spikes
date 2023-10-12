@@ -55,8 +55,7 @@ It's time to actually connect our project to our MongoDB database. From MongoDB,
 Install the [**dotenv**](https://www.freecodecamp.org/news/how-to-use-node-environment-variables-with-a-dotenv-file-for-node-js-and-npm/) package from npm, then paste this into the index:
 
 ```js
-import * as dotenv from "dotenv";
-dotenv.config();
+import 'dotenv/config'
 ```
 
 Create a new file at the root of the `server` called `.env`. This will hold all our environment variables. **Make sure to add it to the .gitignore!!**

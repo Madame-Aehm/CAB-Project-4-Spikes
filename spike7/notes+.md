@@ -34,9 +34,8 @@ We can now write a middleware function that will be attached to any endpoint we 
 
 ```js
 import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
+import 'dotenv/config'
 import { UserModel } from "../models/user.js";
-dotenv.config();
 
 const cookieAuth = async (req, res, next) => {
   console.log(req.cookies)

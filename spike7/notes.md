@@ -28,8 +28,7 @@ Create the export function, call it something like 'configurePassport', then pas
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { User } from '../models/users.js'
-import * as dotenv from "dotenv";
-dotenv.config();
+import 'dotenv/config'
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

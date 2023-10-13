@@ -8,19 +8,13 @@ First step: get rid of all errors and warnings. Even something as small as an un
 
 We'll also need to add a `vercel.json` file to the root of each project. This where we set the [configuration settings](https://vercel.com/docs/concepts/projects/project-configuration). 
 
-```json
-// client
-{
-  "routes": [{
-    "src": "/[^.]+",
-    "dest": "/",
-    "status": 200
-  }]
-}
-```
+To use Vercel, you'll need an account. We'll actually be deploying **two** projects - your client and your server will be deployed separately. From your overview, click **Add New...** to add a new project.
+
+### Deploy Back-End
+
+Add the `vercel.json`, then add, commit, and push to GitHub:
 
 ```json
-// server
 {
   "builds": [{
     "src": "./index.js",
@@ -34,19 +28,29 @@ We'll also need to add a `vercel.json` file to the root of each project. This wh
 }
 ```
 
-To use Vercel, you'll need an account. Once that's done, from your overview, click **Add New...** to add a new project.
+We'll import from a GitHub repository, so make sure your remote repo has the latest version of your project. Select your project, then under **Configure Project**, our first step will be to change the **Root Directory** to your `server`.
 
-We'll import from a GitHub repository, so make sure your remote repo has the latest version of your project. Select your project.
-
-We'll actually be deploying **two** projects - your client and your server will be deployed separately. So under **Configure Project**, our first step will be to change the **Root Directory**. Let's deploy the **server** first. 
-
-Underneath there will be a dropdown for us to enter our **Environmental Variables**. Copy and paste your entire `.env` file into these inputs (you can actually paste the entire file, and Vercel will separate the keys from the values).
+Underneath, there will be a dropdown for us to enter our **Environmental Variables**. Copy and paste your entire `.env` file into these inputs (you can actually paste the entire file, and Vercel will separate the keys from the values).
 
 **Deploy**!! The build can sometimes take a few minutes. 
 
-If everything goes according to plan, you should be able to visit the open `get` API endpoints in the browser and see your data!
+If everything goes according to plan, you can now visit your API endpoints and interact with them the same as if you were running it locally on localhost. 
 
-Now let's look at the front-end. Go back to the main overview, and click **Add New...** again to add another project. Select your project, but this time set the root to your **client** directory.
+### Deploy Front-End
+
+Add the `vercel.json`, then add, commit, and push to GitHub:
+
+```json
+{
+  "routes": [{
+    "src": "/[^.]+",
+    "dest": "/",
+    "status": 200
+  }]
+}
+```
+
+Now let's look at the front-end. Go back to the main overview, and click **Add New...** again to add another project. Select your project, but this time set the **Root Directory** to your `client`.
 
 We're going to have to add our `.env` file again, but here's where we'll need to edit variable defining the base URL of our back-end. It will no longer be `http://localhost:5000/`, but instead the root URL of your newly deployed server project! 
 

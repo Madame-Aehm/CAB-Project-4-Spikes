@@ -50,7 +50,7 @@ Since some of the callback functions for our routes will get quite long, a good 
 
 **CRUD** = **Create**, **Read**, **Update**, and **Delete**. These are the four basic database functions.
 
-It's time to actually connect our project to our MongoDB database. From MongoDB, on the Database Deployments page, click the button to **Connect**, then **Connect your application**. There's a code snippet here that we're going to copy, but these details need to stay private. So let's set up an **.env** file to hold them.
+It's time to actually connect our project to our MongoDB database. From MongoDB, on the Database Deployments page, click the button to **Connect**, then **Connect your application**. There's a string here that we're going to copy, but these details need to stay private. So let's set up an **.env** file to hold them.
 
 Install the [**dotenv**](https://www.freecodecamp.org/news/how-to-use-node-environment-variables-with-a-dotenv-file-for-node-js-and-npm/) package from npm, then paste this into the index:
 
@@ -60,7 +60,7 @@ import 'dotenv/config'
 
 Create a new file at the root of the `server` called `.env`. This will hold all our environment variables. **Make sure to add it to the .gitignore!!**
 
-`.env` files save data in the format: VARIABLE_NAME=value. Strings don't need quotation marks. To access this variable, use **process.env.VARIABLE_NAME**. We're going to save the code snippet from MongoDB as a variable:
+`.env` files save data in the format: VARIABLE_NAME=value. Strings don't need quotation marks. To access this variable, use **process.env.VARIABLE_NAME**. We're going to save the URI string from MongoDB as a variable:
 
 ```js
 MONGO_URI=mongodb+srv:...
@@ -105,7 +105,7 @@ Back on our `userModel.js` file, using another property on the mongoose variable
 export const UserModel = mongoose.model("user", userSchema);
 ```
 
-- We can use this Model to access the collection. This is allowed because we've configured Mongoose on our index.js with the variables in our `.env` file. Back over on our `userControllers.js` file, we can write a new function to `.find()` all the documents (this is a Mongoose function!) and return a `.status(200)` response as a `.json()`. Export this, then use it in the callback for a new route on `userRoutes.js`:
+We can use this Model to access the collection. This is allowed because we've configured Mongoose on our index.js with the variables in our `.env` file. Back over on our `userControllers.js` file, we can write a new function to `.find()` all the documents (this is a Mongoose function!) and return a `.status(200)` response as a `.json()`. Export this, then use it in the callback for a new route on `userRoutes.js`:
 
 ```js
 // routes
@@ -126,7 +126,7 @@ export const getUsers = async (req, res) => {
 }
 ```
 
-Once you're getting a positive response through Postman, you can try writing the fetch request in React. Typescript is going to want to know the shape of the object we'll be receiving from our fetch. We can create an `interface` for a User, and a `Type` for the array of Users we expect to receive. If we think we're going to be using them in more than just this file (likely), we can save these Types in an `@types` folder, in an `index.d.ts` file. This means they're universally available without needing to export/import:
+Once you're getting a positive response through Postman, you can try writing the fetch request in React. Typescript is going to want to know the shape of the object we'll be receiving from our fetch. We can create an `interface` for a User, and a `Type` for the array of Users we expect to receive. If we think we're going to be using them in more than just this file (likely), we can save these Types in a file in our `@types` folder:
 
 ```ts
 interface User {
@@ -139,7 +139,7 @@ interface User {
 type Users = User[]
 ```
 
-We will need to create a state to hold the result of our fetch. Since we know it will always be an array, we can initialize it as an empty array, but set the Type to be the `Users` type we created. We will then write a fetch request like usual, and call it in a `useEffect()`. Rather than hardcoding the localhost URL, it's a good idea to create a `.env` file to hold the **base URL** of our server. For development, this is going to be the local host port. Later though, it will change to the domain we deploy it to. If we don't set this environmental variable now, we'll have to manually change all our fetch requests went we deploy. 
+We will need to create a state to hold the result of our fetch. Since we know it will always be an array, we can initialize it as an empty array, but set the Type to be the `Users` type we created. We will then write a fetch request like usual, and call it in a `useEffect()`. Rather than hardcoding the localhost URL, it's a good idea to create an `.env` file to hold the **base URL** of our server. For development, this is going to be the local host port. Later though, it will change to the domain we deploy it to. If we don't set this environmental variable now, we'll have to manually change all our fetch requests went we deploy. 
 
 But what if we want to make more specific [find](https://mongoosejs.com/docs/api/model.html#Model.find()) requests? Let's make an endpoint with parameters! Since for now our database only holds users, we'll try to find a specific user by their email. Since we've set this property to be unique in our database, we can use Mongoose's `findOne()` method. If we searched by a property that could return multiple results, this method will return the _first_ document matching our filter. Alternatively, you could use `findById()`, or simply `find({ detail: value })` which will return an array of all documents matching the filter. **note** that these matches will be subject to case-sensitivity unless you specify otherwise!
 

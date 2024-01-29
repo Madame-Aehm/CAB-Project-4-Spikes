@@ -1,12 +1,12 @@
 # Project 4
 
-## Spike 1 - MERN Project Kick Off, Project Structure + Initial Setup
+## Spike 1 - MERN Project Kick Off, Project Structure, MongoDB, Node Server setup, Nodemon, Concurrently
 
-## Spike 2 - Express Server + Mongoose
+## Spike 2 - Express, Express Router, Controller Functions, Mongoose Schema + Model, Request Parameters
 
-## Spike 3 - POST Requests
+## Spike 3 - POST Requests, Req Object
 
-## Spike 4 - Populate + Transactions
+## Spike 4 - Populate + Transactions?
 
 ## Spike 5 - Image Upload
 

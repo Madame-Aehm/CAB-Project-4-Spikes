@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.border {
+  border: solid black 1px;
+  border-radius: 8px;
+}
+
+.container {
+  width: 80vw;
+  min-height: 200px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+form {
+  margin: 0.5em;
+  padding-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+}
+
+.gridItemRight {
+  justify-self: end;
+  padding: 0 1em 0.5em 0;
+}
+
+.line {
+  border-right: solid black 1px
+}
+
+@media screen and (max-width: 400px) {
+  
+}
+
+.pointer:hover {
+  cursor: pointer;
+  text-shadow: black 1px 0 10px;;
+}

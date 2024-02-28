@@ -8,7 +8,7 @@
 
 ## Spike 4 - Populate + Transactions?
 
-## Spike 5 - Image Upload
+## Spike 5 - Image Upload (Cloudinary + Multer)
 
 ## Spike 6 - Authentication + Password Encryption
 

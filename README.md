@@ -23,6 +23,5 @@
   - Show us your Routes and explain the various ways you passed information into your controller functions
   - Did you use Populate?
   - Did you validate user input on Front-End, Back-End, or both?
-  - How did you find using Typescript? Do you feel like it was helpful or a hindrance?
   - Do you have a feature/function/solution that you are most proud of?
   - What did you find most challenging?

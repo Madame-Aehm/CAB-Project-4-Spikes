@@ -56,7 +56,7 @@ We're going to have to add our `.env` file again, but here's where we'll need to
 
 **Deploy**!! And hopefully, your app is now fully online! Since we have it linked to the remote GitHub repository, any changes pushed to the branch you've deployed will trigger a rebuild of the vercel deployment, and you new changes should be live within a few minutes.
 
-## Deploy to Render
+# Deploy to Render
 
 An alternative to Vercel is [**Render**](https://render.com/) - you'll need to create an account. Just like with Vercel, we'll be deploying our front-end and our back-end separately.
 
@@ -108,7 +108,7 @@ Since we used **Vite** to build our app, I've followed the [documentation](https
 npm install -d vite-plugin-pwa
 ```
 
-On our `vite.config.ts` (or `.js` if you haven't used Typescript), we will import `VitePWA` form this package, and call it in the `plugins` array. We'll also create a **manifest object** to pass as an argument to this function (the TS Type for this is also included in the pwa plugin package). This will include all the properties we want on our `manifest.json` that we are going to let the plugin generate for us on build. 
+On our `vite.config.ts` (or `.js` if you haven't used Typescript), we will import `VitePWA` from this package, and call it in the `plugins` array. We'll also create a **manifest object** to pass as an argument to this function (the TS Type for this is also included in the pwa plugin package). This will include all the properties we want on our `manifest.json` that we are going to let the plugin generate for us on build. 
 
 ```ts
 import { defineConfig } from 'vite'
@@ -118,8 +118,8 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 const manifestForPlugIn: Partial<VitePWAOptions> = {
   registerType: "autoUpdate",
   manifest:{
-    name:"Honey Badgers MERN Spikes App",
-    short_name:"HB MERN",
+    name:"Petrol Raccoons MERN Spikes App",
+    short_name:"PR MERN",
     description:"This app was created during live demos of MERN stack technologies.",
     icons:[
     {
@@ -133,12 +133,6 @@ const manifestForPlugIn: Partial<VitePWAOptions> = {
       sizes:'192x192',
       type:'image/png',
       purpose:'any maskable'
-    },
-    {
-      src:'assets/maskable_icon_x192.png',
-      sizes:'192x192',
-      type:'image/png',
-      purpose:'apple touch icon',
     }
   ],
   theme_color:'#171717',
@@ -159,7 +153,7 @@ A manifest **must** include at least a `name` and `short_name`, which be the tit
 
 Feel free to look through all the additional [properties](https://web.dev/add-manifest/#manifest-properties) and customize them for your app! 
 
-Once you're satisfied with the shape of this object, we can run `npm run build` from the `client` to create a local build folder to inspect what the plugin will generate for us. We should then link the generated `manifest` file in our `index.html`.
+Once you're satisfied with the shape of this object, we can run `npm run build` from the `client` to create a local build folder to inspect what the plugin will generate for us. Make sure the `index.html` in the `build` folder has a link to the generated `manifest` file:
 
 ```html
 <link rel="manifest" href="manifest.webmanifest">

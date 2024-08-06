@@ -10,7 +10,7 @@
 
 **Express.js** is a framework designed to build APIs. On it's own, Node.js does not know how to perform serving files, handling requests, and handling HTTP methods, so this is where Express.js comes in. Express is to Node, as React is to JavaScript! [This](https://kinsta.com/knowledgebase/what-is-express-js/) page gives a good summary.
 
-**MongoDB** is a document database, it stores data in JSON-like documents. We will use it to hold the data we previously saved in Firebase. 
+**MongoDB** is a NoSQL document database, it stores data in JSON-like documents. We will use it to hold the data we previously saved in Firebase. 
 
 ## Project Structure
 

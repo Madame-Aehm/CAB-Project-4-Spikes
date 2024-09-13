@@ -56,6 +56,8 @@ We're going to have to add our `.env` file again, but here's where we'll need to
 
 **Deploy**!! And hopefully, your app is now fully online! Since we have it linked to the remote GitHub repository, any changes pushed to the branch you've deployed will trigger a rebuild of the vercel deployment, and you new changes should be live within a few minutes.
 
+Once your front-end is deployed, if you are interested, you can add configuration options to [cors](https://www.npmjs.com/package/cors?activeTab=readme) to limit your server to only accept requests from your own front-end.
+
 # Deploy to Render
 
 An alternative to Vercel is [**Render**](https://render.com/) - you'll need to create an account. Just like with Vercel, we'll be deploying our front-end and our back-end separately.

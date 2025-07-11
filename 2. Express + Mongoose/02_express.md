@@ -14,7 +14,7 @@ This is when you're going to start using [Postman](https://www.postman.com/downl
 
 Since this project is going to be quite large, we're going to separate it into different folders. Create a folder now to hold all our **routes**, and a `.js` file inside for 'user', or 'userRoutes'. This is where we're going to define all the end-points that will affect the documents held in our 'users' collection over on MongoDB.
 
-In our `userRoutes.js` file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
+In our `userRoutes` file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
 
 Use this Router Instance to set up a test 'get' route. Make sure to also export the router instance: 
 
@@ -38,13 +38,13 @@ import userRouter from './routes/users.js'
 app.use('/api/users', userRouter);
 ```
 
-Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take note of where you're putting your **/** symbols. In a similar way to React Router, a **catch-all** endpoint can be indicated with an **asterisk**:
+Now let's use Postman to test it! Our endpoint is going to be 'localhost:5000/api/users/test'. If we've set it all up correctly, we should get a response of 'testing route....'! Take note of where you're putting your **/** symbols. In a similar way to React Router, [a **catch-all** endpoint](https://expressjs.com/en/guide/migrating-5.html#path-syntax) will communicate that this route has no functionality:
 
 ```js
-app.use('*', (req, res) => res.status(404).json({ error: "Endpoint not found." }));
+app.use('/*splat', (req, res) => res.status(404).json({ error: "Endpoint not found." }));
 ```
 
-Since some of the callback functions for our routes will get quite long, a good practise is to collect them all in a **controller** file. I'm going to create a folder **controllers**, and inside I'll create a `.js` file for 'user', or 'userController'. Here I will write and export my express functions, then import them into my routes file. I'll demonstrate this with the test route function, even though it is only very small. **Note** the difference between a **regular export**, and a **default export**. 
+Since some of the callback functions for our routes will get quite long, a good practice is to collect them all in a **controller** file. I'm going to create a folder **controllers**, and inside I'll create a file for 'user', or 'userController'. Here I will write and export my express functions, then import them into my routes file. I'll demonstrate this with the test route function, even though it is only very small. **Note** the difference between a **regular export**, and a **default export**. 
 
 ## CRUD & Connecting MongoDB
 
@@ -81,7 +81,7 @@ mongoose
   .catch((err) => console.log(err));
 ```
 
-One of the reasons we're using Mongoose on top of MongoDB is because it offers us the opportunity to create **Models** of our data, essentially locking the form it can take with a **Schema**. You set the shape of your data object, and Mongoose makes sure any attempts to add or update data conform to the defined shape. Since we'll need a Model for every collection, we'll make another folder in our server for **models**, and a `.js` file for 'user', or 'userModel'.
+One of the reasons we're using Mongoose on top of MongoDB is because it offers us the opportunity to create **Models** of our data, essentially locking the form it can take with a **Schema**, like TypeScript for our database! You set the shape of your data object, and Mongoose makes sure any attempts to add or update data conform to the defined shape. In most cases, Mongoose will also [automatically infer the TypeScript Type](https://mongoosejs.com/docs/typescript.html) from this definition. Since we'll need a Model for every collection, we'll make another folder in our server for **models**, and a file for 'user', or 'userModel'.
 
 On the `userModel.js` file, import mongoose from 'mongoose'. This variable has a property **Schema**, which we can use to create a **new** Schema, and define the shape of our user object:
 
@@ -89,7 +89,7 @@ On the `userModel.js` file, import mongoose from 'mongoose'. This variable has a
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   username: String,
   password: { type: String, required: true }
 }, { timestamps: true })
@@ -99,7 +99,7 @@ There is huge potential for creating incredibly complex and specific Schemas. Fo
 
 Let's create a collection for 'users' on MongoDB and then manually add some documents. Make sure each document conforms to the Schema, and be very careful not to make any typos. Remember that your collection should have a **lower-case**, **plural** name.
 
-Back on our `userModel.js` file, using another property on the mongoose variable we will create a **Model**. Mongoose [best-practise](https://samwize.com/2014/03/07/what-mongoose-never-explain-to-you-on-case-sentivity/) is to name your Modal with the **capitalized**, **singular** version of your collection name. Then link it to the collection using the **lower-case**, **singular** verion of your collection name. Make sure to export it:
+Back on our `userModel.js` file, using another property on the mongoose variable we will create a **Model**. Mongoose [best-practise](https://samwize.com/2014/03/07/what-mongoose-never-explain-to-you-on-case-sentivity/) is to name your Modal with the **capitalized**, **singular** version of your collection name. Then link it to the collection using the **lower-case**, **singular** version of your collection name. Make sure to export it:
 
 ```js
 export const UserModel = mongoose.model("user", userSchema);

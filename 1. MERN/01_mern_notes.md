@@ -58,13 +58,15 @@ Next, we want to initialize a `package.json` file. We do this by opening a termi
 npm init -y
 ```
 
-You'll then be prompted to establish some information about your project. If you later want to change any of these details, you can edit the `package.json`. Start by adding:
+You'll then be prompted to establish some information about your project. If you later want to change any of these details, you can edit the `package.json`. 
+
+If you are **not** using TypeScript, start by adding:
 
 ```js
 "type": "module"
 ```
 
-This removes the need to 'require' packages, instead you can just use 'import' the same way we've been using in React. A `package.json` "type" value of "module" tells Node.js to interpret files within that package as using [ES module syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+This removes the need to 'require' packages, instead you can just use 'import' the same way we've been using in React. A `package.json` "type" value of "module" tells Node.js to interpret files within that package as using [ES module syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Only do this if you aren't using TypeScript, this information is added through the `tsconfig.json` otherwise. 
 
 While we're on the `package.json`, we can add a script to start our server.
 

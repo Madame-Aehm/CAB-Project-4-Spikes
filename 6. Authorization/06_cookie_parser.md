@@ -1,4 +1,4 @@
-# Project 4: Spike 7 (option 2)
+# Project 4: Spike 6 (option 2)
 
 ## Authorization with Express Cookie Parser
 

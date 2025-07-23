@@ -51,11 +51,15 @@ const getAllWithOwner = async(req, res) => {
 }
 ```
 
-It's worth making some visual aids for yourself at this point, so you can keep track of how your documents and collections relate to each other. [This](https://app.diagrams.net/) is a great free resource for building diagrams - here's an example made my a previous student:
+It's worth making some visual aids for yourself at this point, so you can keep track of how your documents and collections relate to each other. [This](https://app.diagrams.net/) is a great free resource for building diagrams - here are some examples for different ways to manage the same data:
 
-![mern_diagram](mern_diagram.jpg)
+![mern_diagram1](./diagram-examples/diagram1.png)
+![mern_diagram2](./diagram-examples/diagram2.png)
+![mern_diagram3](./diagram-examples/diagram3.png)
 
 
 ## Transactions
 
 **Transactions** should be used when the set of database operations you are making needs to be **atomic**, ie. they _all_ need to succeed, or all changes should be reverted.. The transaction ensures that the database is always in a consistent state.
+
+[Docs link](https://mongoosejs.com/docs/transactions.html#advanced-usage)

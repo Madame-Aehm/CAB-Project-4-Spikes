@@ -40,24 +40,19 @@ const login = async(req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
     if (!existingUser) {
-      res.status(404).json({ error: "no user found" })
+      return res.status(404).json({ error: "no user found" })
     }
     if (existingUser) {
       const verified = await bcrypt.compare(req.body.password, existingUser.password);
       if (!verified) {
-        res.status(406).json({ error: "password doesn't match" })
+        return res.status(406).json({ error: "password doesn't match" })
       }
-      if (verified) {
-        res.status(200).json({
-          verified: true,
-          user: {
-            _id: existingUser._id,
-            username: existingUser.username,
-            pets: existingUser.pets,
-            avatar: existingUser.avatar
-          }
-        })
-      }
+      user.set("password", undefined);
+      res.status(200).json({
+        verified: true,
+        user
+      })
+      
     }
   } catch (e) {
     console.log(e);
@@ -90,7 +85,7 @@ The **Payload** is the body of the token, this is where the actual data used to 
 
 The **Signature** is both the Header and Payload [**Base64Url encoded**](https://bunny.net/academy/http/what-is-base64-encoding-and-decoding/), plus our **secret key** (which we will define later), hashed using the algorithm defined in our Header. 
 
-To start working with JWT, we first have to install the package. In the [libraries](https://jwt.io/libraries) we want to find and install the package compatible with Node.js. Then create a `.js` file in `utils` for **jwt**. It's extremely important to keep the secret key private, so I'll put this into the `.env` file. It just needs to be a string - it can be whatever you want it to be!
+To start working with JWT, we first have to install the package. In the [libraries](https://jwt.io/libraries) we want to find and install the package compatible with Node.js. Then create a `.js` file in `utils` for **jwt**. It's extremely important to keep the secret key private, so I'll put this into the `.env` file.
 
 ```
 JWT_SECRET=this-is-my-secret-key
@@ -102,16 +97,12 @@ This [documentation](https://github.com/auth0/node-jsonwebtoken) will guide us t
 import jwt from "jsonwebtoken";
 import 'dotenv/config'
 
-export const generateToken = (user) => {
+export const generateToken = (_id, email) => {
   const payload = {
-    sub: user._id,
-    email: user.email,
-    avatar: user.avatar,
+    sub: _id,
+    email: email
   }
-  const options = {
-    expiresIn: "7d",
-  };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, options)
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" })
   return token
 }
 ```
@@ -120,17 +111,11 @@ This function can be exported and imported into our `usersController.js` to be u
 
 ```js
 if (verified) {
-  const token = generateToken(existingUser);
+  const token = generateToken(existingUser._id.toString(), existingUser.email);
   res.status(200).json({ 
     verified: true,
     token: token,
-    user: {
-      _id: existingUser._id,
-      email: existingUser.email,
-      avatar: existingUser.avatar,
-      username: existingUser.username,
-      pets: existingUser.pets
-    }
+    user
   })
 }
 ```

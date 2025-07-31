@@ -17,8 +17,8 @@
 ## Spike 8 - Deployment + PWA configuration
 
 # Presentation
-- Live Demo (max 5 minutes)
-- Code Review
+Live Demo (max 5 minutes)
+Code Review
   - Show us your Schemas and explain your Database Structure
   - Show us your Routes and explain the various ways you passed information into your controller functions
   - Did you use Populate?

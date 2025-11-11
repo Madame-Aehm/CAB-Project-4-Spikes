@@ -12,9 +12,10 @@ To use Vercel, you'll need an account. We'll actually be deploying **two** proje
 
 ## Deploy Back-End
 
-Add the `vercel.json`, then add, commit, and push to GitHub:
+Add the `vercel.json`:
 
-```json
+<!-- ```json
+// js
 {
   "builds": [{
     "src": "./index.js",
@@ -26,15 +27,50 @@ Add the `vercel.json`, then add, commit, and push to GitHub:
     "status": 200
   }]
 }
+``` -->
+
+```json
+{
+    "builds": [
+        {
+            "src": "dist/index.js",
+            "use": "@vercel/node",
+            "config": { "includeFiles": ["dist/**"] }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "dist/index.js"
+        }
+    ]
+}
 ```
 
-We'll import from a GitHub repository, so make sure your remote repo has the latest version of your project. Select your project, then under **Configure Project**, our first step will be to change the **Root Directory** to your `server`.
+We will need to compile the TypeScript into a JavaScript build folder for Vercel to accept it. Edit your `package.json` to include the following scripts:
+
+```json
+{
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js"
+    }
+}
+```
+
+Now run your build script from the terminal: `npm run build`.
+
+It should generate a `dist` folder, with your code transpiled into JavaScript. You will need to remove "dist" from your `.gitignore` so that it can be pushed to GitHub.
+
+We'll import from a GitHub repository, so add, commit and push all your changes to GitHub. From Vercel, create a new project and select your repo, then under **Configure Project**, our first step will be to change the **Root Directory** to your `server`.
 
 Underneath, there will be a dropdown for us to enter our **Environmental Variables**. Copy and paste your entire `.env` file into these inputs (you can actually paste the entire file, and Vercel will separate the keys from the values).
 
 **Deploy**!! The build can sometimes take a few minutes. 
 
 If everything goes according to plan, you can now visit your API endpoints and interact with them the same as if you were running it locally on localhost. 
+
+You can continue working on your project, and when you are ready to see new changes applied, rerun the build script and push the changes. Vercel is watching your repo - any new commits to the main branch will trigger an automatic redeploy.
 
 ## Deploy Front-End
 
@@ -58,7 +94,7 @@ We're going to have to add our `.env` file again, but here's where we'll need to
 
 Once your front-end is deployed, if you are interested, you can add configuration options to [cors](https://www.npmjs.com/package/cors?activeTab=readme) to limit your server to only accept requests from your own front-end.
 
-# Deploy to Render
+<!-- # Deploy to Render
 
 An alternative to Vercel is [**Render**](https://render.com/) - you'll need to create an account. Just like with Vercel, we'll be deploying our front-end and our back-end separately.
 
@@ -92,11 +128,11 @@ Again, you'll have make some specifications:
 
 Scroll down, and under **Advanced** you can add your environmental variables. If you used an environmental variable to track the baseURL of your back-end, you'll need to change it to the URL of your deployed API. 
 
-When deploying a single page application that utilizes React Router, an extra step needs to be taken to insure the hosting service knows what to do when you refresh on a page other than the landing page. The usual behaviour of a website when you refresh, is to check the URL and then make a request for the `.html` file that should be hosted at that path. However, for a single page application built with a framework like React, there is only **one** `.html` file, so we need to tell the hosting service to always go to the `index.html`, then JavaScript will do the rest!
+When deploying a single page application that utilizes React Router, an extra step needs to be taken to insure the hosting service knows what to do when you refresh on a page other than the landing page. The usual behavior of a website when you refresh, is to check the URL and then make a request for the `.html` file that should be hosted at that path. However, for a single page application built with a framework like React, there is only **one** `.html` file, so we need to tell the hosting service to always go to the `index.html`, then JavaScript will do the rest!
 
 On Render, you can do this under **Redirects/Rewrites**. We have to write a [rule](https://docs.render.com/deploy-create-react-app#using-client-side-routing) for Client-Side Routing. They have some good [documentation](https://render.com/docs/redirects-rewrites) on how to define these rules. We are just going to add one **Rewrite**, where the **Source** will be `/*` and the **Destination** will be `/index.html`. 
 
-**Create Static Site**! 
+**Create Static Site**!  -->
 
 # PWA configuration
 

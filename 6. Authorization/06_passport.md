@@ -1,4 +1,4 @@
-# Project 4: Spike 7 (option 1)
+# Project 4: Spike 6 (option 1)
 
 ## Authorization with Passport Strategy
 

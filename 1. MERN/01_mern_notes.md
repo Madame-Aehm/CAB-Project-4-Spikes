@@ -72,7 +72,7 @@ While we're on the `package.json`, we can add a script to start our server.
 
 ```json
   "scripts": {
-    "dev": "node index.ts"
+    "dev": "node --watch index.ts"
   },
 ```
 

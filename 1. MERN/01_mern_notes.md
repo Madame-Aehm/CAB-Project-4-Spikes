@@ -78,13 +78,15 @@ While we're on the `package.json`, we can add a script to start our server.
 
 Now you can run `npm run dev` from the server terminal, and your code will run! 
 
-However, if you make a change, you will need to **rerun** your script to see those changes apply. A very convenient development tool is [**Nodemon**](https://www.npmjs.com/package/nodemon), which will watch your files for changes and automatically rerun your code when changes are detected. For TypeScript, it might also be necessary to install [`ts-node`](https://nodejs.org/en/learn/typescript/run) if you're using a [Node version less than 23.6.0](https://nodejs.org/en/learn/typescript/run-natively). Install the packages as development dependencies only:
+For older versions of Node, the `--watch` tag may not work, so you can install [**Nodemon**](https://www.npmjs.com/package/nodemon) to watch your files for changes and automatically rerun your code when changes are detected. For TypeScript, it might also be necessary to install [`ts-node`](https://nodejs.org/en/learn/typescript/run) if you're using a [Node version less than 23.6.0](https://nodejs.org/en/learn/typescript/run-natively). Install the packages as development dependencies only:
 
 ```shell
 npm install -D nodemon ts-node
 ```
 
-Now change your "dev" script to be `nodemon index.ts`, and run it from the terminal. When you make a change, Nodemon will rerun the code and you should see your updated message. To exit the active development server, use <kbd>Ctrl</kbd> + <kbd>c</kbd>
+Now change your "dev" script to be `nodemon index.ts`, and run it from the terminal. When you make a change, Nodemon will rerun the code and you should see your updated message. 
+
+To exit the active development server, use <kbd>Ctrl</kbd> + <kbd>c</kbd>
 
 You will need to install more dependencies. Run the following to install [**Express**](https://expressjs.com/en/starter/installing.html), [**Cors**](https://expressjs.com/en/resources/middleware/cors.html), and [**Dotenv**](https://www.npmjs.com/package/dotenv):
 
@@ -107,7 +109,7 @@ app.listen(port, () => {
 });
 ```
 
-If you are using TypeScript, you will probably notice there are already errors. This is due to the installed dependencies not having included Types, as these packages have existing in plain JavaScript since before TypeScript even existed. Thankfully, a community project called **DefinitelyTyped** have worked to create installable declaration files for many JavaScript-only packages. 
+If you are using TypeScript, you will probably notice there are already errors. This is due to the installed dependencies not having included Types, as these packages have existed in plain JavaScript since before TypeScript even existed. Thankfully, a community project called **DefinitelyTyped** have worked to create installable declaration files for many JavaScript-only packages. 
 
 You'll need to install the separate Types packages for both Express and Cors as development dependencies:
 

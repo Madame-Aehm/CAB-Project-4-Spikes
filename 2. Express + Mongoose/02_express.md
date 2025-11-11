@@ -12,9 +12,11 @@ app.get('/', (req, res) => {
 
 This is when you're going to start using [Postman](https://www.postman.com/downloads/) a _lot_. If you haven't already, you should download it for this project - the desktop version runs much better. We'll use it now to test our first endpoint! If I change the **path**, then I must send the request to that new end-point to receive the response. If I change the **method**, my request method must also match.
 
-Since this project is going to be quite large, we're going to separate it into different folders. Create a folder now to hold all our **routes**, and a `.js` file inside for 'user', or 'userRoutes'. This is where we're going to define all the end-points that will affect the documents held in our 'users' collection over on MongoDB.
+Since this project is going to be quite large, we're going to separate it into different folders. Create a folder now to hold all our **routes**, and a `ts` file inside for 'user', or 'userRoutes'. This is where we're going to define all the end-points that will affect the documents held in our 'users' collection over on MongoDB.
 
-In our `userRoutes` file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: this creates a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
+In our `userRoutes` file we're going to use Express' [**express.Router**](https://expressjs.com/en/guide/routing.html). According to the documentation: 
+
+> Use the express.Router class to create a modular, mountable route handler. A **Router Instance** is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”. 
 
 Use this Router Instance to set up a test 'get' route. Make sure to also export the router instance: 
 

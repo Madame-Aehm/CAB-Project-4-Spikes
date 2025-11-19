@@ -16,6 +16,9 @@ Create an object that you would send through as a new user - make sure it follow
 
 ```js
 const createUser = async(req, res) => {
+  if (!req.body.email|| !req.body.password || !req.body.username) {
+    return res.status(406).json({ error: "Please fill out all fields" })
+  }
   const newUser = new UserModel({
     email: req.body.email,
     password: req.body.password,
@@ -32,24 +35,7 @@ const createUser = async(req, res) => {
 }
 ```
 
-It's also a good idea to do some validation. If `req.body` is missing any of the required fields, send back an error. `Error code 11000` is linked to attempting to duplicate a property set to be unique, so we can create a custom error message in this case:
-
-```js
-const registerUser = async(req, res) => {
-  if (!req.body.email|| !req.body.password || !req.body.username) return res.status(406).json({ error: "Please fill out all fields" })
-  const newUser = new User({ ...req.body });
-  try {
-    const result = await newUser.save();
-    res.status(200).json(result)
-  } catch(e) {
-    console.log(e);
-    e.code === 11000 ? res.status(406).json({ error: "That email is already registered" }) 
-    : res.status(500).json({ error: "Unknown error occurred" });
-  }
-}
-```
-
-Once this is working we can create a form in React. A trick to keeping all your object changes to a single handleChange function, is to use [] around a property name to define it from a variable (in this case, the event.target.name), and the value from the event.target.value:
+Once you've tested this works in Postman, create a form in React. A trick to keeping all your object changes to a single handleChange function, is to use [] around a property name to define it from a variable (in this case, the event.target.name), and the value from the event.target.value:
 
 ```js
   const handleChange = (e) => {
